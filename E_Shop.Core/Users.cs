@@ -7,6 +7,7 @@ namespace Electronics_shop.Core
     {
         private Users(Guid id, string name, string email, string login, string password, string image)
         {
+            Id = id;
             Name = name;
             Email = email;
             Login = login;

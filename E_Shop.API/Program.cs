@@ -3,6 +3,7 @@ using E_Shop.DataAccess;
 using E_Shop.DataAccess.Repositories;
 using E_Shop.Core.Interfaces;
 using E_Shop.Application.Services;
+using E_Shop.DataAccess.Mapping;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 builder.Services.AddDbContext<EShopDbContext>(
     options =>

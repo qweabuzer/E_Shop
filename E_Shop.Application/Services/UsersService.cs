@@ -20,15 +20,24 @@ namespace E_Shop.Application.Services
 
         public async Task<Result<Guid>> CreateUser(Users user)
         {
-            return await _usersRepository.Create(user);
+            var result = await _usersRepository.Create(user);
+            if (result == Guid.Empty)
+                return Result.Failure<Guid>("Пользователь уже существует");
+
+            return Result.Success<Guid>(result);
         }
 
         public async Task<Result<Guid>> UpdateInfo(Guid id, string name, string email, string login, string password, string image)
         {
-            return await _usersRepository.Update(id, name, email, login, password, image);
+            var result = await _usersRepository.Update(id, name, email, login, password, image);
+
+            if (result == Guid.Empty)
+                return Result.Failure<Guid>("Логин или почта уже заняты");
+
+            return Result.Success<Guid>(result);
         }
 
-        public async Task<Result<Guid>> Delete(Guid id)
+        public async Task<Guid> Delete(Guid id)
         {
             return await _usersRepository.Delete(id);
         }

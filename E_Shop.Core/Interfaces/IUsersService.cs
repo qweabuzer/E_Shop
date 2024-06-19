@@ -9,6 +9,6 @@ namespace E_Shop.Core.Interfaces
         Task<List<Users>> GetAllUsers();
         Task<Result<Guid>> CreateUser(Users user);
         Task<Result<Guid>> UpdateInfo(Guid id, string name, string email, string login, string password, string image);
-        Task<Result<Guid>> Delete(Guid id);
+        Task<Guid> Delete(Guid id);
     }
 }
