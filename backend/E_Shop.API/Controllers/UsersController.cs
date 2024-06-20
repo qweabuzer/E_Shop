@@ -8,17 +8,17 @@ namespace E_Shop.API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class HomeController : ControllerBase
+    public class UsersController : ControllerBase
     {
         private readonly IUsersService _usersService;
         private readonly IAuthService _authService;
-        public HomeController(IUsersService usersService, IAuthService authService)
+        public UsersController(IUsersService usersService, IAuthService authService)
         {
             _usersService = usersService;
             _authService = authService;
         }
 
-        [HttpGet]
+        [HttpGet("GetAll")]
         public async Task<ActionResult<List<UserResponse>>> GetAllUsers()
         {
             var users = await _usersService.GetAllUsers();
@@ -36,7 +36,7 @@ namespace E_Shop.API.Controllers
             return Ok(response);
         }
 
-        [HttpPost]
+        [HttpPost("Create")]
         public async Task<ActionResult<Guid>> CreateUser([FromBody] UsersRequest request)
         {
             var user = Users.Create(
@@ -59,7 +59,7 @@ namespace E_Shop.API.Controllers
             return Ok(userId.Value);
         }
 
-        [HttpPut]
+        [HttpPut("Update")]
         public async Task<ActionResult<Guid>> UpdateUser(Guid userId, [FromBody] UsersRequest request)
         {
             var result = await _usersService.UpdateInfo(
@@ -76,7 +76,7 @@ namespace E_Shop.API.Controllers
             return Ok(userId);
         }
 
-        [HttpDelete]
+        [HttpDelete("Delete")]
         public async Task<ActionResult<Guid>> DeleteUser(Guid userId)
         {
             return Ok(await _usersService.Delete(userId));

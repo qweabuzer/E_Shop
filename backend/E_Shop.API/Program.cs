@@ -7,12 +7,28 @@ using E_Shop.DataAccess.Mapping;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(typeof(MappingProfile));
+/*builder.Services.AddCors(options =>
+{ 
+    options.AddPolicy("AllowFrontend", builder =>
+        builder.WithOrigins("http://localhost:3000") 
+               .AllowAnyMethod()
+               .AllowAnyHeader()
+               .AllowCredentials());
+});*/
+
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.WithOrigins("http://localhost:3000");
+        policy.AllowAnyHeader();
+        policy.AllowAnyMethod();
+    });
+});
 
 builder.Services.AddDbContext<EShopDbContext>(
     options =>
@@ -27,17 +43,17 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
+
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
-
+app.UseCors();
 app.MapControllers();
 
 app.Run();
