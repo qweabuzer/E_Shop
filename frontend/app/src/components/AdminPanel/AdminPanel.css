@@ -1,0 +1,41 @@
+/* Файл: src/components/AdminPanel/AdminPanel.css */
+
+.admin-panel {
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.admin-panel .form-container {
+    margin: 20px 0;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #fff;
+}
+
+.admin-panel .form-container .form-group {
+    margin-bottom: 15px;
+}
+
+.admin-panel .form-container .form-control {
+    width: 100%;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+.admin-panel .form-container .btn {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+}
+
+.admin-panel .btn {
+    margin-top: 10px;
+}
