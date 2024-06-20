@@ -1,7 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using E_Shop.API.Contracts;
+using E_Shop.Core.Models;
 using E_Shop.Core.Interfaces;
-using Electronics_shop.Core;
 using Microsoft.AspNetCore.Mvc;
 
 namespace E_Shop.API.Controllers

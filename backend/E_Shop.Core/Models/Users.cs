@@ -1,7 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using System.Text.RegularExpressions;
 
-namespace Electronics_shop.Core
+namespace E_Shop.Core.Models
 {
     public class Users
     {
@@ -14,12 +14,12 @@ namespace Electronics_shop.Core
             Password = password;
             ProfileImage = image;
         }
-        public Guid Id { get; set; }
-        public string Name { get; set; }
-        public string Email { get; set; }
-        public string Login { get; set; }
-        public string Password { get; set; }
-        public string ProfileImage { get; set; }
+        public Guid Id { get; }
+        public string Name { get; }
+        public string Email { get; }
+        public string Login { get; }
+        public string Password { get; }
+        public string ProfileImage { get; }
 
         public const string noImage = "https://www.no5.com/media/1772/place-holder-image.png";
         public static int UserCounter { get; set; } = 0;
@@ -52,7 +52,7 @@ namespace Electronics_shop.Core
 
             UserCounter++;
 
-            return Result.Success<Users>(user);
+            return Result.Success(user);
         }
     }
 

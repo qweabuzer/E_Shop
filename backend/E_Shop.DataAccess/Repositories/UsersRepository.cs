@@ -1,19 +1,22 @@
 ﻿using AutoMapper;
+using E_Shop.Core.Models;
 using E_Shop.Core.Interfaces;
 using E_Shop.DataAccess.Entities;
-using Electronics_shop.Core;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace E_Shop.DataAccess.Repositories
 {
     public class UsersRepository : IUsersRepository
     {
         private readonly EShopDbContext _context;
+        private readonly ILogger<UsersRepository> _logger;
         private readonly IMapper _mapper;
 
-        public UsersRepository(EShopDbContext context, IMapper mapper)
+        public UsersRepository(EShopDbContext context, ILogger<UsersRepository> logger, IMapper mapper)
         {
             _context = context;
+            _logger = logger;
             _mapper = mapper;
         }
 

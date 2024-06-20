@@ -1,6 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
+using E_Shop.Core.Models;
 using E_Shop.Core.Interfaces;
-using Electronics_shop.Core;
 
 namespace E_Shop.Application.Services
 {
