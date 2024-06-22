@@ -1,4 +1,4 @@
-﻿namespace E_Shop.API.Contracts
+﻿namespace E_Shop.API.Contracts.Users
 {
     public record UserResponse(
         Guid Id,

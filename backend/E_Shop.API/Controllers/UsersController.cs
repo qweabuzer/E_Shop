@@ -1,8 +1,8 @@
 ﻿using CSharpFunctionalExtensions;
-using E_Shop.API.Contracts;
 using E_Shop.Core.Models;
 using E_Shop.Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using E_Shop.API.Contracts.Users;
 
 namespace E_Shop.API.Controllers
 {
@@ -73,7 +73,7 @@ namespace E_Shop.API.Controllers
             if (result.IsFailure)
                 return BadRequest(result.Error);
 
-            return Ok(userId);
+            return Ok(result.Value);
         }
 
         [HttpDelete("Delete")]

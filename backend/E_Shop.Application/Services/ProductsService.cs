@@ -16,12 +16,22 @@ namespace E_Shop.Application.Services
         }
         public async Task<Result<Guid>> CreateProduct(Product product)
         {
-            return await _productsRepository.Create(product);
+            var result = await _productsRepository.Create(product);
+
+            if (result == Guid.Empty)
+                return Result.Failure<Guid>("Ошибка при создании пользователя");
+
+            return Result.Success<Guid>(result);
         }
 
-        public async Task<Guid> DeleteProduct(Guid id)
+        public async Task<Result<Guid>> DeleteProduct(Guid id)
         {
-            return await _productsRepository.Delete(id);
+            var result = await _productsRepository.Delete(id);
+
+            if (result == Guid.Empty)
+                return Result.Failure<Guid>("Ошибка при удалении пользователя");
+
+            return Result.Success<Guid>(result);
         }
 
         public async Task<List<Product>> GetAllProducts()
@@ -29,9 +39,14 @@ namespace E_Shop.Application.Services
             return await _productsRepository.GetAll();
         }
 
-        public async Task<Result<Guid>> UpdateInfo(Guid id, string name, string description, decimal price, Guid categoryId, string image, bool isAvailable)
+        public async Task<Result<Guid>> UpdateInfo(Guid id, string name, string description, decimal? price, Guid? categoryId, string image, bool? isAvailable)
         {
-            return await _productsRepository.Update(id, name, description, price, categoryId, image, isAvailable);
+            var result =  await _productsRepository.Update(id, name, description, price, categoryId, image, isAvailable);
+
+            if (result == Guid.Empty)
+                return Result.Failure<Guid>("Ошибка обновления данных");
+
+            return Result.Success<Guid>(result);
         }
     }
 }

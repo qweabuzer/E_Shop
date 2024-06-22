@@ -22,15 +22,23 @@ namespace E_Shop.DataAccess.Repositories
 
         public async Task<List<Product>> GetAll()
         {
-            var productEntities = await _context.Products
-                .AsNoTracking()
-                .ToListAsync();
+            try
+            {
+                var productEntities = await _context.Products
+                    .AsNoTracking()
+                    .ToListAsync();
 
-            var products = productEntities
-                .Select(p => _mapper.Map<Product>(p))
-                .ToList();
+                var products = productEntities
+                    .Select(p => _mapper.Map<Product>(p))
+                    .ToList();
 
-            return products;
+                return products;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return new List<Product>();
+            }
         }
 
         public async Task<Guid> Create(Product product)
@@ -53,25 +61,30 @@ namespace E_Shop.DataAccess.Repositories
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
+                await Console.Out.WriteLineAsync("Ошибка: " + ex.Message);
                 return Guid.Empty;
             }
         }
 
-        public async Task<Guid> Update(Guid id, string name, string description, decimal price, Guid categoryId, string image, bool isAvailable)
+        public async Task<Guid> Update(Guid id, string name, string description, decimal? price, Guid? categoryId, string image, bool? isAvailable)
         {
             try
             {
-                var chekName = await _context.Products
-                    .FirstOrDefaultAsync(p => p.Name == name);
+                if (!string.IsNullOrEmpty(name))
+                {
+                    var chekName = await _context.Products
+                        .FirstOrDefaultAsync(p => p.Name == name);
 
-                if (chekName != null)
-                    return Guid.Empty;
+                    if (chekName != null)
+                        return Guid.Empty;
 
-                else if (!string.IsNullOrEmpty(name))
-                    await _context.Products
-                    .Where(p => p.Id == id)
-                    .ExecuteUpdateAsync(s => s
-                    .SetProperty(p => p.Name, p => name));
+                    else if (!string.IsNullOrEmpty(name))
+                        await _context.Products
+                        .Where(p => p.Id == id)
+                        .ExecuteUpdateAsync(s => s
+                        .SetProperty(p => p.Name, p => name));
+                }
+
 
                 if (!string.IsNullOrEmpty(description))
                     await _context.Products
@@ -79,21 +92,24 @@ namespace E_Shop.DataAccess.Repositories
                     .ExecuteUpdateAsync(s => s
                     .SetProperty(p => p.Description, p => description));
 
-                if (price > 0)
+                if (price.HasValue && price > 0)
                     await _context.Products
                     .Where(p => p.Id == id)
                     .ExecuteUpdateAsync(s => s
                     .SetProperty(p => p.Price, p => price));
 
-                var checkCategory = await _context.Categories
-                    .FirstOrDefaultAsync(p => p.Id == categoryId);
-
-                if (checkCategory != null)
+                if (categoryId.HasValue)
                 {
-                    await _context.Products
-                        .Where(p => p.Id == id)
-                        .ExecuteUpdateAsync(s => s
-                        .SetProperty(p => p.Description, p => description));
+                    var checkCategory = await _context.Categories
+                        .FirstOrDefaultAsync(p => p.Id == categoryId);
+
+                    if (checkCategory != null)
+                    {
+                        await _context.Products
+                            .Where(p => p.Id == id)
+                            .ExecuteUpdateAsync(s => s
+                            .SetProperty(p => p.Description, p => description));
+                    }
                 }
 
                 if (!string.IsNullOrEmpty(image))
@@ -102,10 +118,11 @@ namespace E_Shop.DataAccess.Repositories
                     .ExecuteUpdateAsync(s => s
                     .SetProperty(p => p.Image, p => image));
 
-                await _context.Products
-                .Where(p => p.Id == id)
-                .ExecuteUpdateAsync(s => s
-                .SetProperty(p => p.IsAvailable, p => isAvailable));
+                if (isAvailable.HasValue)
+                    await _context.Products
+                    .Where(p => p.Id == id)
+                    .ExecuteUpdateAsync(s => s
+                    .SetProperty(p => p.IsAvailable, p => isAvailable));
 
                 return id;
             }

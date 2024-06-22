@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace E_Shop.API.Contracts
+namespace E_Shop.API.Contracts.Users
 {
     public class UsersRequest
     {

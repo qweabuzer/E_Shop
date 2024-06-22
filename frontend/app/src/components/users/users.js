@@ -37,7 +37,7 @@ export const deleteUser = async (userId) => {
         const response = await axios.delete(`https://localhost:7222/Users/Delete?userId=${userId}`);
         return response.data;
     } catch (error) {
-        console.error('Ошибка при удалении пользователя', error);
+        console.error('Ошибка удаления пользователя', error);
         throw error;
     }
 };

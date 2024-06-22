@@ -1,5 +1,3 @@
-// Файл: src/components/UserList/UserList.js
-
 import React from 'react';
 import './UserList.css';
 
@@ -9,17 +7,17 @@ const UserList = ({ users }) => {
             <h3>User List</h3>
             <div className="list-group">
                 {users.map(user => (
-                    <div key={user.id} className="list-group-item">
+                    <div key={user.id} className="card">
                         <img 
                             src={user.profileImage || 'https://www.no5.com/media/1772/place-holder-image.png'} 
                             alt={user.name} 
-                            className="user-image" 
+                            className="card-img-top user-image" 
                         />
-                        <div className="user-details">
-                            <h5>{user.name}</h5>
-                            <p>Id: {user.id}</p>
-                            <p>Email: {user.email}</p>
-                            <p>Login: {user.login}</p>
+                        <div className="card-body user-details">
+                            <h5 className="card-title">{user.name}</h5>
+                            <p className="card-text">Id: {user.id}</p>
+                            <p className="card-text">Email: {user.email}</p>
+                            <p className="card-text">Login: {user.login}</p>
                         </div>
                     </div>
                 ))}

@@ -8,7 +8,7 @@ namespace E_Shop.Core.Interfaces
     {
         Task<List<Product>> GetAllProducts();
         Task<Result<Guid>> CreateProduct(Product product);
-        Task<Result<Guid>> UpdateInfo(Guid id, string name, string description, decimal price, Guid categoryId, string image, bool isAvailable);
-        Task<Guid> DeleteProduct(Guid id);
+        Task<Result<Guid>> UpdateInfo(Guid id, string name, string description, decimal? price, Guid? categoryId, string image, bool? isAvailable);
+        Task<Result<Guid>> DeleteProduct(Guid id);
     }
 }
