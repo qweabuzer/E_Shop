@@ -32,14 +32,17 @@ namespace E_Shop.Core.Models
             if (!Regex.IsMatch(password, "^[a-zA-Z0-9]+$"))
                 return Result.Failure<Users>("Для поля Password запрещены все символы кроме латинских букв и цифр");
 
-            if (string.IsNullOrEmpty(image))
+            if (string.IsNullOrWhiteSpace(image))
                 image = noImage;
 
-            if (string.IsNullOrEmpty(name))
+            if (string.IsNullOrWhiteSpace(name))
             {
                 var userName = "user" + UserCounter.ToString();
                 name = userName;
             }
+
+            if (!Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+                return Result.Failure<Users>("Неверный формат email");
 
 
             var user = new Users(

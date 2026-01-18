@@ -29,16 +29,19 @@ namespace E_Shop.Core.Models
 
         public static Result<Product> Create(Guid id, string name, string description, decimal price, Guid? categoryId, string image, bool isAvailable)
         {
-            if (string.IsNullOrEmpty(name))
+            if (string.IsNullOrWhiteSpace(name))
                 return Result.Failure<Product>("Название не может быть пустым");
 
-            if (string.IsNullOrEmpty(description))
+            if (name.Length > 300)
+                return Result.Failure<Product>("Длина названия не может превышать 300 симмволов");
+
+            if (string.IsNullOrWhiteSpace(description))
                 description = NoDiscription;
 
-            if (price <= 0)
+            if (price < 1)
                 return Result.Failure<Product>("Цена не может быть меньше 1");
 
-            if (string.IsNullOrEmpty(image))
+            if (string.IsNullOrWhiteSpace(image))
                 image = NoImage;
 
             var product = new Product(

@@ -19,7 +19,7 @@ namespace E_Shop.Application.Services
             var result = await _productsRepository.Create(product);
 
             if (result == Guid.Empty)
-                return Result.Failure<Guid>("Ошибка при создании пользователя");
+                return Result.Failure<Guid>("Ошибка при создании товара");
 
             return Result.Success<Guid>(result);
         }
@@ -29,7 +29,7 @@ namespace E_Shop.Application.Services
             var result = await _productsRepository.Delete(id);
 
             if (result == Guid.Empty)
-                return Result.Failure<Guid>("Ошибка при удалении пользователя");
+                return Result.Failure<Guid>("Ошибка при удалении товара");
 
             return Result.Success<Guid>(result);
         }
