@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using E_Shop.DataAccess;
 using E_Shop.DataAccess.Repositories;
 using E_Shop.Core.Interfaces;
@@ -38,7 +38,8 @@ builder.Services.AddCors(options =>
 builder.Services.AddDbContext<EShopDbContext>(
     options =>
     {
-        options.UseSqlServer(builder.Configuration.GetConnectionString(nameof(EShopDbContext)));
+        options.UseNpgsql(builder.Configuration.GetConnectionString(nameof(EShopDbContext)));
+        //options.UseSqlServer(builder.Configuration.GetConnectionString(nameof(EShopDbContext)));
     });
 
 builder.Services.AddScoped<IUsersRepository, UsersRepository>();
@@ -53,6 +54,49 @@ builder.Services.AddScoped<ICategoryService, CategoryService>();
 
 
 var app = builder.Build();
+
+
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<EShopDbContext>();
+
+    for (int i = 0; i < 30; i++)
+    {
+        try
+        {
+            Console.WriteLine($"попытка подключения к БД ({i + 1}/30)...");
+
+            if (dbContext.Database.CanConnect())
+            {
+                Console.WriteLine("подключено к БД!");
+
+                var pendingMigrations = dbContext.Database.GetPendingMigrations();
+                if (pendingMigrations.Any())
+                {
+                    Console.WriteLine($"применяем миграции: {string.Join(", ", pendingMigrations)}");
+                    dbContext.Database.Migrate();
+                    Console.WriteLine("миграции применены");
+                }
+                else
+                {
+                    Console.WriteLine("нет pending миграций.");
+                }
+
+                break;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"ошибка подключения: {ex.Message}");
+            if (i == 29)
+            {
+                Console.WriteLine("не удалось подключиться к БД. приложение запускается без БД.");
+                break;
+            }
+            Thread.Sleep(1000);
+        }
+    }
+}
 
 if (app.Environment.IsDevelopment())
 {

@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34316.72
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "E_Shop.API", "E_Shop.API.csproj", "{8E494ECB-4BA4-48D7-B719-5B7E3AC055E5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "E_Shop.API", "E_Shop.API\E_Shop.API.csproj", "{8E494ECB-4BA4-48D7-B719-5B7E3AC055E5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "E_Shop.Core", "..\E_Shop.Core\E_Shop.Core.csproj", "{9B6F4304-0AE4-4B7F-9EE6-2DE5CECD318D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "E_Shop.Core", "E_Shop.Core\E_Shop.Core.csproj", "{9B6F4304-0AE4-4B7F-9EE6-2DE5CECD318D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "E_Shop.DataAccess", "..\E_Shop.DataAccess\E_Shop.DataAccess.csproj", "{77C9C2DE-61F5-4C42-AB36-5A27590DA021}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "E_Shop.DataAccess", "E_Shop.DataAccess\E_Shop.DataAccess.csproj", "{77C9C2DE-61F5-4C42-AB36-5A27590DA021}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "E_Shop.Application", "..\E_Shop.Application\E_Shop.Application.csproj", "{C182C1E2-8CC6-4DBE-9E23-CF0B49FECC33}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "E_Shop.Application", "E_Shop.Application\E_Shop.Application.csproj", "{C182C1E2-8CC6-4DBE-9E23-CF0B49FECC33}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "E_Shop.UnitTests", "..\E_Shop.UnitTests\E_Shop.UnitTests.csproj", "{E2D4E7C7-FED1-4D44-8F6A-062AF4FDCC37}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "E_Shop.UnitTests", "E_Shop.UnitTests\E_Shop.UnitTests.csproj", "{E2D4E7C7-FED1-4D44-8F6A-062AF4FDCC37}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
