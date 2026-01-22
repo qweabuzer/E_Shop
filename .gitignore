@@ -436,3 +436,56 @@ psd
 thumb
 sketch
 
+
+# Docker
+.dockerignore
+docker-compose.override.yml
+docker-compose.*.yml
+.env
+.env.local
+*.env.local
+.env.*.local
+!.env.example
+
+# Docker volumes
+**/postgres-data/
+
+# Docker build artifacts
+**/Dockerfile.original
+**/Dockerfile.backup
+
+# Docker secrets
+secrets/
+
+# Docker Compose build context
+**/appsettings.Docker.local.json
+
+# VS Docker tools
+**/.docker/
+**/Properties/launchSettings.json.Docker
+
+# Application specific
+appsettings.*.json
+!appsettings.json
+!appsettings.Development.json
+!appsettings.Docker.json
+
+# Migration files (сохраняем, но без временных)
+**/Migrations/*.Designer.cs
+**/Migrations/*.resx
+
+# NuGet packages для Docker (восстанавливаются при сборке)
+**/packages/
+
+# Резервные копии
+*.backup
+*.bak
+
+# Временные файлы Docker
+*.tmp
+temp/
+
+# Логи Docker
+docker.log
+compose.log
+
