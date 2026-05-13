@@ -65,6 +65,15 @@ namespace E_Shop.DataAccess.Repositories
 
         public async Task<Guid> Update(Guid id, string name, string email, string login, string password, string image)
         {
+            var chekLogin = await _context.Users
+                .FirstOrDefaultAsync(u => u.Login == login && u.Id != id);
+
+            var checkEmail = await _context.Users
+                .FirstOrDefaultAsync(u => u.Email == email && u.Id != id);
+
+            if (chekLogin != null || checkEmail != null)
+                return Guid.Empty;
+
             if (!string.IsNullOrEmpty(name))
                 await _context.Users
                 .Where(u => u.Id == id)
@@ -77,28 +86,13 @@ namespace E_Shop.DataAccess.Repositories
                 .ExecuteUpdateAsync(s => s
                 .SetProperty(u => u.Email, u => email));
 
-            var chekLogin = await _context.Users
-                .FirstOrDefaultAsync(u => u.Login == login);
-
-            var checkEmail = await _context.Users
-                .FirstOrDefaultAsync(u => u.Email == email);
-
-            if (chekLogin != null || checkEmail != null)
-                return Guid.Empty;
-
-            else if (!string.IsNullOrEmpty(login))
-            {
+            if (!string.IsNullOrEmpty(login))
+            
                 await _context.Users
                     .Where(u => u.Id == id)
                     .ExecuteUpdateAsync(s => s
                     .SetProperty(u => u.Login, u => login));
-
-                await _context.Users
-                  .Where(u => u.Id == id)
-                  .ExecuteUpdateAsync(s => s
-                  .SetProperty(u => u.Email, u => email));
-            }
-
+            
             if (!string.IsNullOrEmpty(password))
                 await _context.Users
                 .Where(u => u.Id == id)

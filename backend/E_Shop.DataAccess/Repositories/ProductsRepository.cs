@@ -36,7 +36,7 @@ namespace E_Shop.DataAccess.Repositories
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message);
+                _logger.LogError(ex, "ошибка при получении продуктов");
                 return new List<Product>();
             }
         }
@@ -60,7 +60,7 @@ namespace E_Shop.DataAccess.Repositories
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message);
+                _logger.LogError(ex, "ошибка при создани продукта");
                 await Console.Out.WriteLineAsync("Ошибка: " + ex.Message);
                 return Guid.Empty;
             }
@@ -73,7 +73,7 @@ namespace E_Shop.DataAccess.Repositories
                 if (!string.IsNullOrEmpty(name))
                 {
                     var chekName = await _context.Products
-                        .FirstOrDefaultAsync(p => p.Name == name);
+                        .FirstOrDefaultAsync(p => p.Name == name && p.Id != id);
 
                     if (chekName != null)
                         return Guid.Empty;
@@ -104,12 +104,10 @@ namespace E_Shop.DataAccess.Repositories
                         .FirstOrDefaultAsync(p => p.Id == categoryId);
 
                     if (checkCategory != null)
-                    {
                         await _context.Products
                             .Where(p => p.Id == id)
                             .ExecuteUpdateAsync(s => s
-                            .SetProperty(p => p.Description, p => description));
-                    }
+                            .SetProperty(p => p.CategoryId, p => categoryId));
                 }
 
                 if (!string.IsNullOrEmpty(image))
@@ -128,7 +126,7 @@ namespace E_Shop.DataAccess.Repositories
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message);
+                _logger.LogError(ex, "ошибка при обновлении продукта {Id}", id);
                 return Guid.Empty;
             }
         }
@@ -146,7 +144,7 @@ namespace E_Shop.DataAccess.Repositories
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message);
+                _logger.LogError(ex, "ошибка при удалении продукта {Id}", id);
                 return Guid.Empty;
             }
         }
