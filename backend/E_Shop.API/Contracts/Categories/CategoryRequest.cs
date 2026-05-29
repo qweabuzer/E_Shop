@@ -2,11 +2,8 @@
 
 namespace E_Shop.API.Contracts.Categories
 {
-    public class CategoryRequest
-    {
-        [DefaultValue("")]
-        public string Name { get; set; } = string.Empty;
-        [DefaultValue("")]
-        public string Description { get; set; } = string.Empty;
-    }
+    public record CategoryRequest(
+        string Name = "",
+        string Description = ""
+    );
 }
