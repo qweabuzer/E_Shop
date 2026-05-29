@@ -2,16 +2,6 @@
 
 public record UserResponse
 {
-	public UserResponse(Guid id, string name, string email, string login, string password, string profileImage)
-	{
-		Id = id;
-		Name = name;
-		Email = email;
-		Login = login;
-		Password = password;
-		ProfileImage = profileImage;
-	}
-
 	public Guid Id { get; init; }
 	public string Name { get; init; }
 	public string Email { get; init; }

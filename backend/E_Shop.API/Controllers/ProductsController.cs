@@ -99,4 +99,15 @@ namespace E_Shop.API.Controllers
             return Ok(result.Value);
         }
     }
+		var response = products
+			.Select(p => new ProductResponse
+			{
+				Id = p.Id,
+				Name = p.Name,
+				Description = p.Description,
+				Price = p.Price,
+				CategoryId = p.CategoryId,
+				Image = p.Image,
+				IsAvailable = p.IsAvailable
+			});
 }

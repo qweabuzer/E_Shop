@@ -89,4 +89,11 @@ namespace E_Shop.API.Controllers
         }
 
     }
+		var response = products
+			.Select(c => new CategoryResponse
+			{
+				Id = c.Id,
+				Name = c.Name,
+				Description = c.Description
+			});
 }
