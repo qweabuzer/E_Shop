@@ -4,14 +4,19 @@ using E_Shop.DataAccess.Repositories;
 using E_Shop.Core.Interfaces;
 using E_Shop.Application.Services;
 using E_Shop.DataAccess.Mapping;
+using E_Shop.API.Swagger;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-builder.Services.AddAutoMapper(typeof(MappingProfile));
 
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SchemaFilter<DefaultValueSchemaFilter>();
+});
+
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 builder.Logging.AddDebug();
@@ -49,6 +54,7 @@ builder.Services.AddScoped<IUsersService, UsersService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
+
 
 
 

@@ -1,25 +1,11 @@
-﻿using System.ComponentModel;
+﻿namespace E_Shop.API.Contracts.Products;
 
-namespace E_Shop.API.Contracts.Products
+public record UpdateProductRequest
 {
-    public class UpdateProductRequest
-    {
-        [DefaultValue("")]
-        public string Name { get; set; } = string.Empty;
-
-        [DefaultValue("")]
-        public string Description { get; set; } = string.Empty;
-
-        [DefaultValue(null)]
-        public decimal? Price { get; set; } = null;
-
-        [DefaultValue(null)]
-        public Guid? CategoryId { get; set; } = null;
-
-        [DefaultValue("")]
-        public string Image { get; set; } = string.Empty;
-
-        [DefaultValue(null)]
-        public bool? IsAvailable { get; set; } = null;
-    }
+	public string? Name { get; init; }
+	public string? Description { get; init; }
+	public decimal? Price { get; init; }
+	public Guid? CategoryId { get; init; }
+	public string? Image { get; init; }
+	public bool IsAvailable { get; init; }
 }

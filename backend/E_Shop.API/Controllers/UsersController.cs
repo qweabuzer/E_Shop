@@ -32,6 +32,16 @@ namespace E_Shop.API.Controllers
                     u.Password,
                     u.ProfileImage
                     ));
+		var response = users
+			.Select(u => new UserResponse
+			{
+				Id = u.Id,
+				Name = u.Name,
+				Email = u.Email,
+				Login = u.Login,
+				Password = u.Password,
+				ProfileImage = u.ProfileImage!
+			});
 
             return Ok(response);
         }

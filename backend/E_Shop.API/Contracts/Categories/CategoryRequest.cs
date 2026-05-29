@@ -1,12 +1,7 @@
-﻿using System.ComponentModel;
+﻿namespace E_Shop.API.Contracts.Categories;
 
-namespace E_Shop.API.Contracts.Categories
+public record CategoryRequest
 {
-    public class CategoryRequest
-    {
-        [DefaultValue("")]
-        public string Name { get; set; } = string.Empty;
-        [DefaultValue("")]
-        public string Description { get; set; } = string.Empty;
-    }
+	public required string Name { get; init; }
+	public required string Description { get; init; }
 }

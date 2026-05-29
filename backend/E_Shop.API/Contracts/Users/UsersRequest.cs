@@ -1,18 +1,10 @@
-﻿using System.ComponentModel;
+﻿namespace E_Shop.API.Contracts.Users;
 
-namespace E_Shop.API.Contracts.Users
+public record UsersRequest
 {
-    public class UsersRequest
-    {
-        [DefaultValue("")]
-        public string Name { get; set; } = string.Empty;
-        [DefaultValue("")]
-        public string Email { get; set; } = string.Empty;
-        [DefaultValue("")]
-        public string Login { get; set; } = string.Empty;
-        [DefaultValue("")]
-        public string Password { get; set; } = string.Empty;
-        [DefaultValue("")]
-        public string ProfileImage { get; set; } = string.Empty;
-    }
+	public required string Name { get; init; }
+	public required string Email { get; init; }
+	public required string Login { get; init; }
+	public required string Password { get; init; }
+	public string? ProfileImage { get; init; }
 }
