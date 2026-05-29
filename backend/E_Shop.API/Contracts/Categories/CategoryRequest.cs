@@ -1,9 +1,7 @@
-﻿using System.ComponentModel;
+﻿namespace E_Shop.API.Contracts.Categories;
 
-namespace E_Shop.API.Contracts.Categories
+public record CategoryRequest
 {
-    public record CategoryRequest(
-        string Name = "",
-        string Description = ""
-    );
+	public required string Name { get; init; }
+	public required string Description { get; init; }
 }

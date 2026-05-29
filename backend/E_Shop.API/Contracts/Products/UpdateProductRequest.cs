@@ -1,13 +1,11 @@
-﻿using System.ComponentModel;
+﻿namespace E_Shop.API.Contracts.Products;
 
-namespace E_Shop.API.Contracts.Products
+public record UpdateProductRequest
 {
-    public record UpdateProductRequest(
-        string Name = "",
-        string Description = "",
-        decimal? Price = 1,
-        Guid? CategoryId = null,
-        string Image = "",
-        bool? IsAvailable = false
-    );
+	public string? Name { get; init; }
+	public string? Description { get; init; }
+	public decimal? Price { get; init; }
+	public Guid? CategoryId { get; init; }
+	public string? Image { get; init; }
+	public bool IsAvailable { get; init; }
 }

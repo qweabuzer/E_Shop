@@ -1,15 +1,11 @@
-﻿using E_Shop.Core.Models;
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
+﻿namespace E_Shop.API.Contracts.Products;
 
-namespace E_Shop.API.Contracts.Products
+public record ProductRequest
 {
-        public record ProductRequest(
-        string Name = "",
-        string Description = "",
-        decimal Price = 1,
-        Guid? CategoryId = null,
-        string Image = "",
-        bool IsAvailable = false
-        );
+	public required string Name { get; init; }
+	public required string Description { get; init; }
+	public decimal Price { get; init; }
+	public Guid? CategoryId { get; init; }
+	public required string Image { get; init; }
+	public bool IsAvailable { get; init; }
 }

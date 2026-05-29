@@ -1,7 +1,15 @@
-﻿namespace E_Shop.API.Contracts.Categories
+﻿namespace E_Shop.API.Contracts.Categories;
+
+public record CategoryResponse
 {
-    public record CategoryResponse(
-        Guid id,
-        string name,
-        string description);
+	public CategoryResponse(Guid id, string name, string description)
+	{
+		Id = id;
+		Name = name;
+		Description = description;
+	}
+
+	public Guid Id { get; init; }
+	public string Name { get; init; }
+	public string Description { get; init; }
 }
