@@ -1,152 +1,150 @@
 ﻿
 using AutoMapper;
+using E_Shop.Core.Interfaces;
 using E_Shop.Core.Models;
 using E_Shop.DataAccess.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace E_Shop.DataAccess.Repositories
+namespace E_Shop.DataAccess.Repositories;
+
+public class ProductsRepository : IProductsRepository
 {
-    public class ProductsRepository : IProductsRepository
-    {
-        private readonly EShopDbContext _context;
-        private readonly ILogger<ProductsRepository> _logger;
-        private readonly IMapper _mapper;
+	private readonly EShopDbContext _context;
+	private readonly ILogger<ProductsRepository> _logger;
+	private readonly IMapper _mapper;
 
-        public ProductsRepository(EShopDbContext context, ILogger<ProductsRepository> logger, IMapper mapper)
-        {
-            _context = context;
-            _logger = logger;
-            _mapper = mapper;
-        }
+	public ProductsRepository(EShopDbContext context, ILogger<ProductsRepository> logger, IMapper mapper)
+	{
+		_context = context;
+		_logger = logger;
+		_mapper = mapper;
+	}
 
-        public async Task<List<Product>> GetAll()
-        {
-            try
-            {
-                var productEntities = await _context.Products
-                    .AsNoTracking()
-                    .ToListAsync();
+	public async Task<List<Product>> GetAll()
+	{
+		try
+		{
+			var productEntities = await _context.Products
+				.AsNoTracking()
+				.ToListAsync();
 
-                var products = productEntities
-                    .Select(p => _mapper.Map<Product>(p))
-                    .ToList();
+			var products = productEntities
+				.Select(p => _mapper.Map<Product>(p))
+				.ToList();
 
-                return products;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "ошибка при получении продуктов");
-                return new List<Product>();
-            }
-        }
+			return products;
+		}
+		catch (Exception ex)
+		{
+			_logger.LogError(ex, "ошибка при получении продуктов");
+			return new List<Product>();
+		}
+	}
 
-        public async Task<Guid> Create(Product product)
-        {
-            try
-            {
-                var checkProduct = await _context.Products
-                    .FirstOrDefaultAsync(p => p.Name == product.Name);
+	public async Task<Guid> Create(Product product)
+	{
+		try
+		{
+			var checkProduct = await _context.Products
+				.FirstOrDefaultAsync(p => p.Name == product.Name);
 
-                if (checkProduct != null)
-                    return Guid.Empty;
+			if (checkProduct != null)
+				return Guid.Empty;
 
-                var productEntity = _mapper.Map<ProductEntity>(product);
+			var productEntity = _mapper.Map<ProductEntity>(product);
 
-                await _context.AddAsync(productEntity);
-                await _context.SaveChangesAsync();
+			await _context.AddAsync(productEntity);
+			await _context.SaveChangesAsync();
 
-                return productEntity.Id;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "ошибка при создани продукта");
-                await Console.Out.WriteLineAsync("Ошибка: " + ex.Message);
-                return Guid.Empty;
-            }
-        }
+			return productEntity.Id;
+		}
+		catch (Exception ex)
+		{
+			_logger.LogError(ex, "ошибка при создани продукта");
+			await Console.Out.WriteLineAsync("Ошибка: " + ex.Message);
+			return Guid.Empty;
+		}
+	}
 
-        public async Task<Guid> Update(Guid id, string name, string description, decimal? price, Guid? categoryId, string image, bool? isAvailable)
-        {
-            try
-            {
-                if (!string.IsNullOrEmpty(name))
-                {
-                    var chekName = await _context.Products
-                        .FirstOrDefaultAsync(p => p.Name == name && p.Id != id);
+	public async Task<Guid> Update(Guid id, string? name, string? description, decimal? price, Guid? categoryId, string? image, bool? isAvailable)
+	{
+		try
+		{
+			if (!string.IsNullOrEmpty(name))
+			{
+				var chekName = await _context.Products
+					.FirstOrDefaultAsync(p => p.Name == name && p.Id != id);
 
-                    if (chekName != null)
-                        return Guid.Empty;
+				if (chekName != null)
+					return Guid.Empty;
 
-                    else if (!string.IsNullOrEmpty(name))
-                        await _context.Products
-                        .Where(p => p.Id == id)
-                        .ExecuteUpdateAsync(s => s
-                        .SetProperty(p => p.Name, p => name));
-                }
+				else if (!string.IsNullOrEmpty(name))
+					await _context.Products
+					.Where(p => p.Id == id)
+					.ExecuteUpdateAsync(s => s
+					.SetProperty(p => p.Name, p => name));
+			}
 
+			if (!string.IsNullOrEmpty(description))
+				await _context.Products
+				.Where(p => p.Id == id)
+				.ExecuteUpdateAsync(s => s
+				.SetProperty(p => p.Description, p => description));
 
-                if (!string.IsNullOrEmpty(description))
-                    await _context.Products
-                    .Where(p => p.Id == id)
-                    .ExecuteUpdateAsync(s => s
-                    .SetProperty(p => p.Description, p => description));
+			if (price.HasValue && price > 0)
+				await _context.Products
+				.Where(p => p.Id == id)
+				.ExecuteUpdateAsync(s => s
+				.SetProperty(p => p.Price, p => price));
 
-                if (price.HasValue && price > 0)
-                    await _context.Products
-                    .Where(p => p.Id == id)
-                    .ExecuteUpdateAsync(s => s
-                    .SetProperty(p => p.Price, p => price));
+			if (categoryId.HasValue)
+			{
+				var checkCategory = await _context.Categories
+					.FirstOrDefaultAsync(p => p.Id == categoryId);
 
-                if (categoryId.HasValue)
-                {
-                    var checkCategory = await _context.Categories
-                        .FirstOrDefaultAsync(p => p.Id == categoryId);
+				if (checkCategory != null)
+					await _context.Products
+						.Where(p => p.Id == id)
+						.ExecuteUpdateAsync(s => s
+						.SetProperty(p => p.CategoryId, p => categoryId));
+			}
 
-                    if (checkCategory != null)
-                        await _context.Products
-                            .Where(p => p.Id == id)
-                            .ExecuteUpdateAsync(s => s
-                            .SetProperty(p => p.CategoryId, p => categoryId));
-                }
+			if (!string.IsNullOrEmpty(image))
+				await _context.Products
+				.Where(p => p.Id == id)
+				.ExecuteUpdateAsync(s => s
+				.SetProperty(p => p.Image, p => image));
 
-                if (!string.IsNullOrEmpty(image))
-                    await _context.Products
-                    .Where(p => p.Id == id)
-                    .ExecuteUpdateAsync(s => s
-                    .SetProperty(p => p.Image, p => image));
+			if (isAvailable.HasValue)
+				await _context.Products
+				.Where(p => p.Id == id)
+				.ExecuteUpdateAsync(s => s
+				.SetProperty(p => p.IsAvailable, p => isAvailable));
 
-                if (isAvailable.HasValue)
-                    await _context.Products
-                    .Where(p => p.Id == id)
-                    .ExecuteUpdateAsync(s => s
-                    .SetProperty(p => p.IsAvailable, p => isAvailable));
+			return id;
+		}
+		catch (Exception ex)
+		{
+			_logger.LogError(ex, "ошибка при обновлении продукта {Id}", id);
+			return Guid.Empty;
+		}
+	}
 
-                return id;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "ошибка при обновлении продукта {Id}", id);
-                return Guid.Empty;
-            }
-        }
+	public async Task<Guid> Delete(Guid id)
+	{
+		try
+		{
+			await _context.Products
+			   .Where(p => p.Id == id)
+			   .ExecuteDeleteAsync();
 
-        public async Task<Guid> Delete(Guid id)
-        {
-            try
-            {
-                await _context.Products
-                   .Where(p => p.Id == id)
-                   .ExecuteDeleteAsync();
-
-
-                return id;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "ошибка при удалении продукта {Id}", id);
-                return Guid.Empty;
-            }
-        }
-    }
+			return id;
+		}
+		catch (Exception ex)
+		{
+			_logger.LogError(ex, "ошибка при удалении продукта {Id}", id);
+			return Guid.Empty;
+		}
+	}
 }

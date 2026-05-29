@@ -1,20 +1,17 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿#pragma warning disable IDE0211 // Преобразовать в программу в стиле "Program.Main"
+using Microsoft.EntityFrameworkCore;
 using E_Shop.DataAccess;
 using E_Shop.DataAccess.Repositories;
 using E_Shop.Core.Interfaces;
 using E_Shop.Application.Services;
 using E_Shop.DataAccess.Mapping;
-using E_Shop.API.Swagger;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
-builder.Services.AddSwaggerGen(options =>
-{
-    options.SchemaFilter<DefaultValueSchemaFilter>();
-});
+builder.Services.AddSwaggerGen();
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Logging.ClearProviders();
@@ -32,20 +29,20 @@ builder.Logging.SetMinimumLevel(LogLevel.Information);
 
 builder.Services.AddCors(options =>
 {
-    options.AddDefaultPolicy(policy =>
-    {
-        policy.WithOrigins("http://localhost:3000");
-        policy.AllowAnyHeader();
-        policy.AllowAnyMethod();
-    });
+	options.AddDefaultPolicy(policy =>
+	{
+		policy.WithOrigins("http://localhost:3000");
+		policy.AllowAnyHeader();
+		policy.AllowAnyMethod();
+	});
 });
 
 builder.Services.AddDbContext<EShopDbContext>(
-    options =>
-    {
-        options.UseNpgsql(builder.Configuration.GetConnectionString(nameof(EShopDbContext)));
-        //options.UseSqlServer(builder.Configuration.GetConnectionString(nameof(EShopDbContext)));
-    });
+	options =>
+	{
+		options.UseNpgsql(builder.Configuration.GetConnectionString(nameof(EShopDbContext)));
+		//options.UseSqlServer(builder.Configuration.GetConnectionString(nameof(EShopDbContext)));
+	});
 
 builder.Services.AddScoped<IUsersRepository, UsersRepository>();
 builder.Services.AddScoped<IProductsRepository, ProductsRepository>();
@@ -55,61 +52,56 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 
-
-
-
-
 var app = builder.Build();
-
 
 using (var scope = app.Services.CreateScope())
 {
-    var dbContext = scope.ServiceProvider.GetRequiredService<EShopDbContext>();
+	var dbContext = scope.ServiceProvider.GetRequiredService<EShopDbContext>();
 
-    for (int i = 0; i < 30; i++)
-    {
-        try
-        {
-            Console.WriteLine($"попытка подключения к БД ({i + 1}/30)...");
+	for (int i = 0; i < 30; i++)
+	{
+		try
+		{
+			Console.WriteLine($"попытка подключения к БД ({i + 1}/30)...");
 
-            if (dbContext.Database.CanConnect())
-            {
-                Console.WriteLine("подключено к БД!");
+			if (dbContext.Database.CanConnect())
+			{
+				Console.WriteLine("подключено к БД!");
 
-                var pendingMigrations = dbContext.Database.GetPendingMigrations();
-                if (pendingMigrations.Any())
-                {
-                    Console.WriteLine($"применяем миграции: {string.Join(", ", pendingMigrations)}");
-                    dbContext.Database.Migrate();
-                    Console.WriteLine("миграции применены");
-                }
-                else
-                {
-                    Console.WriteLine("нет pending миграций.");
-                }
+				var pendingMigrations = dbContext.Database.GetPendingMigrations();
+				if (pendingMigrations.Any())
+				{
+					Console.WriteLine($"применяем миграции: {string.Join(", ", pendingMigrations)}");
+					dbContext.Database.Migrate();
+					Console.WriteLine("миграции применены");
+				}
+				else
+				{
+					Console.WriteLine("нет pending миграций.");
+				}
 
-                break;
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"ошибка подключения: {ex.Message}");
-            if (i == 29)
-            {
-                Console.WriteLine("не удалось подключиться к БД. приложение запускается без БД.");
-                break;
-            }
-            Thread.Sleep(1000);
-        }
-    }
+				break;
+			}
+		}
+		catch (Exception ex)
+		{
+			Console.WriteLine($"ошибка подключения: {ex.Message}");
+			if (i == 29)
+			{
+				Console.WriteLine("не удалось подключиться к БД. приложение запускается без БД.");
+				break;
+			}
+
+			Thread.Sleep(1000);
+		}
+	}
 }
 
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+	app.UseSwagger();
+	app.UseSwaggerUI();
 }
-
 
 app.UseHttpsRedirection();
 
@@ -118,3 +110,5 @@ app.UseCors();
 app.MapControllers();
 
 app.Run();
+
+#pragma warning restore IDE0211 // Преобразовать в программу в стиле "Program.Main"
