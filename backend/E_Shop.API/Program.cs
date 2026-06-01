@@ -5,6 +5,14 @@ using E_Shop.DataAccess.Repositories;
 using E_Shop.Core.Interfaces;
 using E_Shop.Application.Services;
 using E_Shop.DataAccess.Mapping;
+using FluentValidation;
+using E_Shop.API.Contracts.Validator.Users;
+using E_Shop.API.Contracts.Users;
+using E_Shop.API.Contracts.Validator.Products;
+using E_Shop.API.Contracts.Products;
+using E_Shop.API.Contracts.Validator.Categories;
+using E_Shop.API.Contracts.Categories;
+using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,6 +52,8 @@ builder.Services.AddDbContext<EShopDbContext>(
 		//options.UseSqlServer(builder.Configuration.GetConnectionString(nameof(EShopDbContext)));
 	});
 
+builder.Services.AddFluentValidationAutoValidation();
+
 builder.Services.AddScoped<IUsersRepository, UsersRepository>();
 builder.Services.AddScoped<IProductsRepository, ProductsRepository>();
 builder.Services.AddScoped<IProductsService, ProductsService>();
@@ -51,6 +61,11 @@ builder.Services.AddScoped<IUsersService, UsersService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IValidator<UsersRequest>, CreateUserRequestValidator>();
+builder.Services.AddScoped<IValidator<UsersUpdateRequest>, UpdateUserRequestValidator>();
+builder.Services.AddScoped<IValidator<ProductRequest>, CreateProductRequestValidator>();
+builder.Services.AddScoped<IValidator<UpdateProductRequest>, UpdateProductRequestValidator>();
+builder.Services.AddScoped<IValidator<CategoryRequest>, CreateCategoryRequestValidator>();
 
 var app = builder.Build();
 
