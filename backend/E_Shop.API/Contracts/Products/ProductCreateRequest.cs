@@ -1,6 +1,6 @@
 ﻿namespace E_Shop.API.Contracts.Products;
 
-public record ProductRequest
+public record ProductCreateRequest
 {
 	public required string Name { get; init; }
 	public required string Description { get; init; }

@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace E_Shop.API.Contracts.Validator.Products;
 
-public class CreateProductRequestValidator : AbstractValidator<ProductRequest>
+public class CreateProductRequestValidator : AbstractValidator<ProductCreateRequest>
 {
 	public CreateProductRequestValidator()
 	{

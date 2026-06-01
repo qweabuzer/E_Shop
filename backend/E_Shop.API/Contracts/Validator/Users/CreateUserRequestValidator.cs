@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace E_Shop.API.Contracts.Validator.Users;
 
-public class CreateUserRequestValidator : AbstractValidator<UsersRequest>
+public class CreateUserRequestValidator : AbstractValidator<UsersCreateRequest>
 {
 	public CreateUserRequestValidator()
 	{

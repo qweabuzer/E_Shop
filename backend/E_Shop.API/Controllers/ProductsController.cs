@@ -39,7 +39,7 @@ public class ProductsController : ControllerBase
 	}
 
 	[HttpPost("Create")]
-	public async Task<ActionResult<Guid>> CreateProduct([FromBody] ProductRequest request)
+	public async Task<ActionResult<Guid>> CreateProduct([FromBody] ProductCreateRequest request)
 	{
 		var product = Product.Create(
 			Guid.NewGuid(),

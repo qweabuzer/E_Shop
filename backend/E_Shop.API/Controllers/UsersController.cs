@@ -38,7 +38,7 @@ public class UsersController : ControllerBase
 	}
 
 	[HttpPost("Create")]
-	public async Task<ActionResult<Guid>> CreateUser([FromBody] UsersRequest request)
+	public async Task<ActionResult<Guid>> CreateUser([FromBody] UsersCreateRequest request)
 	{
 		var user = Users.Create(
 			Guid.NewGuid(),

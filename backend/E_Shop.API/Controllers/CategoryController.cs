@@ -35,7 +35,7 @@ public class CategoryController : ControllerBase
 	}
 
 	[HttpPost("Create")]
-	public async Task<ActionResult<Guid>> Create([FromBody] CategoryRequest request)
+	public async Task<ActionResult<Guid>> Create([FromBody] CategoryCreateRequest request)
 	{
 		var category = Category.Create(
 			Guid.NewGuid(),
@@ -60,7 +60,7 @@ public class CategoryController : ControllerBase
 	}
 
 	[HttpPut("Update")]
-	public async Task<ActionResult<Guid>> UpdateInfo(Guid id, [FromBody] CategoryRequest request)
+	public async Task<ActionResult<Guid>> UpdateInfo(Guid id, [FromBody] CategoryCreateRequest request)
 	{
 		var categoryId = await _categoryService.UpdateInfo(
 			id,
