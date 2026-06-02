@@ -1,6 +1,8 @@
 ﻿using E_Shop.API.Contracts.Categories;
+using E_Shop.API.Extensions;
 using E_Shop.Core.Interfaces;
 using E_Shop.Core.Models;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 
 namespace E_Shop.API.Controllers;
@@ -11,11 +13,13 @@ public class CategoryController : ControllerBase
 {
 	private readonly ICategoryService _categoryService;
 	private readonly ILogger<CategoryController> _logger;
+	private readonly IValidator<CreateCategoryRequest> _createValidator;
 
-	public CategoryController(ICategoryService categoryService, ILogger<CategoryController> logger)
+	public CategoryController(ICategoryService categoryService, ILogger<CategoryController> logger, IValidator<CreateCategoryRequest> createValidator)
 	{
 		_categoryService = categoryService;
 		_logger = logger;
+		_createValidator = createValidator;
 	}
 
 	[HttpGet("GetAll")]
@@ -37,6 +41,11 @@ public class CategoryController : ControllerBase
 	[HttpPost("Create")]
 	public async Task<ActionResult<Guid>> Create([FromBody] CreateCategoryRequest request)
 	{
+		var validationResult = await _createValidator.ValidateAsync(request);
+
+		if(!validationResult.IsValid)
+			return BadRequest(validationResult.Errors.ErrorResponse());
+
 		var category = Category.Create(
 			Guid.NewGuid(),
 			request.Name,

@@ -7,6 +7,8 @@ public class CreateCategoryRequestValidator : AbstractValidator<CreateCategoryRe
 {
 	public CreateCategoryRequestValidator()
 	{
+		ClassLevelCascadeMode = CascadeMode.Stop;
+
 		RuleFor(x => x.Name)
 			.NotEmpty()
 			.MaximumLength(25);

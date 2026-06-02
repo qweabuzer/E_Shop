@@ -7,6 +7,8 @@ public class UpdateProductRequestValidator : AbstractValidator<UpdateProductRequ
 {
 	public UpdateProductRequestValidator()
 	{
+		ClassLevelCascadeMode = CascadeMode.Stop;
+
 		RuleFor(x => x.Name)
 			.NotEmpty()
 			.MaximumLength(300)

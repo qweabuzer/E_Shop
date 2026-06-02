@@ -3,6 +3,8 @@ using E_Shop.Core.Models;
 using E_Shop.Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using E_Shop.API.Contracts.Users;
+using FluentValidation;
+using E_Shop.API.Extensions;
 
 namespace E_Shop.API.Controllers;
 
@@ -12,10 +14,14 @@ public class UsersController : ControllerBase
 {
 	private readonly IUsersService _usersService;
 	private readonly IAuthService _authService;
-	public UsersController(IUsersService usersService, IAuthService authService)
+	private readonly IValidator<CreateUsersRequest> _createValidator;
+	private readonly IValidator<UpdateUsersRequest> _updateValidator;
+	public UsersController(IUsersService usersService, IAuthService authService, IValidator<CreateUsersRequest> createValidator, IValidator<UpdateUsersRequest> updateValidator)
 	{
 		_usersService = usersService;
 		_authService = authService;
+		_createValidator = createValidator;
+		_updateValidator = updateValidator;
 	}
 
 	[HttpGet("GetAll")]
@@ -40,6 +46,11 @@ public class UsersController : ControllerBase
 	[HttpPost("Create")]
 	public async Task<ActionResult<Guid>> CreateUser([FromBody] CreateUsersRequest request)
 	{
+		var validationResult = await _createValidator.ValidateAsync(request);
+
+		if (!validationResult.IsValid)
+			return BadRequest(validationResult.Errors.ErrorResponse());
+
 		var user = Users.Create(
 			Guid.NewGuid(),
 			request.Name,
@@ -63,6 +74,11 @@ public class UsersController : ControllerBase
 	[HttpPut("Update")]
 	public async Task<ActionResult<Guid>> UpdateUser(Guid userId, [FromBody] UpdateUsersRequest request)
 	{
+		var validationResult = await _updateValidator.ValidateAsync(request);
+
+		if (!validationResult.IsValid)
+			return BadRequest(validationResult.Errors.ErrorResponse());
+
 		var result = await _usersService.UpdateInfo(
 			userId,
 			request.Name,

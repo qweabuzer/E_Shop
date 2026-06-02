@@ -1,6 +1,8 @@
 ﻿using E_Shop.API.Contracts.Products;
+using E_Shop.API.Extensions;
 using E_Shop.Core.Interfaces;
 using E_Shop.Core.Models;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 
 namespace E_Shop.API.Controllers;
@@ -11,11 +13,14 @@ public class ProductsController : ControllerBase
 {
 	private readonly IProductsService _productsService;
 	private readonly ILogger<ProductsController> _logger;
-	public ProductsController(IProductsService productsService, ILogger<ProductsController> logger)
+	private readonly IValidator<CreateProductRequest> _createValidator;
+	private readonly IValidator<UpdateProductRequest> _updateValidator;
+	public ProductsController(IProductsService productsService, ILogger<ProductsController> logger, IValidator<CreateProductRequest> createValidator, IValidator<UpdateProductRequest> updateValidator)
 	{
 		_productsService = productsService;
 		_logger = logger;
-
+		_createValidator = createValidator;
+		_updateValidator = updateValidator;
 	}
 
 	[HttpGet("GetAll")]
@@ -41,6 +46,11 @@ public class ProductsController : ControllerBase
 	[HttpPost("Create")]
 	public async Task<ActionResult<Guid>> CreateProduct([FromBody] CreateProductRequest request)
 	{
+		var validationResult = await _createValidator.ValidateAsync(request);
+
+		if (!validationResult.IsValid)
+			return BadRequest(validationResult.Errors.ErrorResponse());
+
 		var product = Product.Create(
 			Guid.NewGuid(),
 			request.Name,
@@ -70,6 +80,11 @@ public class ProductsController : ControllerBase
 	[HttpPut("Update")]
 	public async Task<ActionResult<Guid>> UpdateInfo(Guid id, [FromBody] UpdateProductRequest request)
 	{
+		var validationResult = await _updateValidator.ValidateAsync(request);
+
+		if (!validationResult.IsValid)
+			return BadRequest(validationResult.Errors.ErrorResponse());
+
 		var productId = await _productsService.UpdateInfo(
 			id,
 			request.Name,

@@ -12,7 +12,6 @@ using E_Shop.API.Contracts.Validator.Products;
 using E_Shop.API.Contracts.Products;
 using E_Shop.API.Contracts.Validator.Categories;
 using E_Shop.API.Contracts.Categories;
-using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -51,8 +50,6 @@ builder.Services.AddDbContext<EShopDbContext>(
 		options.UseNpgsql(builder.Configuration.GetConnectionString(nameof(EShopDbContext)));
 		//options.UseSqlServer(builder.Configuration.GetConnectionString(nameof(EShopDbContext)));
 	});
-
-builder.Services.AddFluentValidationAutoValidation();
 
 builder.Services.AddScoped<IUsersRepository, UsersRepository>();
 builder.Services.AddScoped<IProductsRepository, ProductsRepository>();
