@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace E_Shop.API.Contracts.Validator.Users;
 
-public class CreateUserRequestValidator : AbstractValidator<UsersCreateRequest>
+public class CreateUserRequestValidator : AbstractValidator<CreateUsersRequest>
 {
 	public CreateUserRequestValidator()
 	{
@@ -29,7 +29,6 @@ public class CreateUserRequestValidator : AbstractValidator<UsersCreateRequest>
 
 		RuleFor(x => x.ProfileImage)
 			.Matches(@"^https?://.*\.(jpg|jpeg|png|gif|webp)$")
-			.MaximumLength(150)
 			.WithMessage("ссылка должна вести на изображение jpg, jpeg, png, gif, webp")
 			.When(x => !string.IsNullOrEmpty(x.ProfileImage));
 	}

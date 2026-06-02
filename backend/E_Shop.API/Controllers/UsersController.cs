@@ -38,7 +38,7 @@ public class UsersController : ControllerBase
 	}
 
 	[HttpPost("Create")]
-	public async Task<ActionResult<Guid>> CreateUser([FromBody] UsersCreateRequest request)
+	public async Task<ActionResult<Guid>> CreateUser([FromBody] CreateUsersRequest request)
 	{
 		var user = Users.Create(
 			Guid.NewGuid(),
@@ -61,7 +61,7 @@ public class UsersController : ControllerBase
 	}
 
 	[HttpPut("Update")]
-	public async Task<ActionResult<Guid>> UpdateUser(Guid userId, [FromBody] UsersUpdateRequest request)
+	public async Task<ActionResult<Guid>> UpdateUser(Guid userId, [FromBody] UpdateUsersRequest request)
 	{
 		var result = await _usersService.UpdateInfo(
 			userId,

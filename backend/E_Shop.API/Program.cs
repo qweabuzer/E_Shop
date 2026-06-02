@@ -61,11 +61,11 @@ builder.Services.AddScoped<IUsersService, UsersService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
-builder.Services.AddScoped<IValidator<UsersCreateRequest>, CreateUserRequestValidator>();
-builder.Services.AddScoped<IValidator<UsersUpdateRequest>, UpdateUserRequestValidator>();
-builder.Services.AddScoped<IValidator<ProductCreateRequest>, CreateProductRequestValidator>();
+builder.Services.AddScoped<IValidator<CreateUsersRequest>, CreateUserRequestValidator>();
+builder.Services.AddScoped<IValidator<UpdateUsersRequest>, UpdateUserRequestValidator>();
+builder.Services.AddScoped<IValidator<CreateProductRequest>, CreateProductRequestValidator>();
 builder.Services.AddScoped<IValidator<UpdateProductRequest>, UpdateProductRequestValidator>();
-builder.Services.AddScoped<IValidator<CategoryCreateRequest>, CreateCategoryRequestValidator>();
+builder.Services.AddScoped<IValidator<CreateCategoryRequest>, CreateCategoryRequestValidator>();
 
 var app = builder.Build();
 

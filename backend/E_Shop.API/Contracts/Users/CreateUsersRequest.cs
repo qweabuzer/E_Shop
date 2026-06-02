@@ -1,6 +1,6 @@
 ﻿namespace E_Shop.API.Contracts.Users;
 
-public record UsersCreateRequest
+public record CreateUsersRequest
 {
 	public required string Name { get; init; }
 	public required string Email { get; init; }

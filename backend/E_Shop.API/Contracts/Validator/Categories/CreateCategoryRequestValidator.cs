@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace E_Shop.API.Contracts.Validator.Categories;
 
-public class CreateCategoryRequestValidator : AbstractValidator<CategoryCreateRequest>
+public class CreateCategoryRequestValidator : AbstractValidator<CreateCategoryRequest>
 {
 	public CreateCategoryRequestValidator()
 	{

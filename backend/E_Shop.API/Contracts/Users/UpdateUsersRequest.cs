@@ -1,6 +1,6 @@
 ﻿namespace E_Shop.API.Contracts.Users;
 
-public record UsersUpdateRequest
+public record UpdateUsersRequest
 {
 	public string? Name { get; init; }
 	public string? Email { get; init; }

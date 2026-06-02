@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace E_Shop.API.Contracts.Validator.Users;
 
-public class UpdateUserRequestValidator : AbstractValidator<UsersUpdateRequest>
+public class UpdateUserRequestValidator : AbstractValidator<UpdateUsersRequest>
 {
 	public UpdateUserRequestValidator()
 	{
@@ -33,7 +33,6 @@ public class UpdateUserRequestValidator : AbstractValidator<UsersUpdateRequest>
 
 		RuleFor(x => x.ProfileImage)
 			.Matches(@"^https?://.*\.(jpg|jpeg|png|gif|webp)$")
-			.MaximumLength(150)
 			.WithMessage("ссылка должна вести на изображение jpg, jpeg, png, gif, webp")
 			.When(x => !string.IsNullOrEmpty(x.ProfileImage));
 	}

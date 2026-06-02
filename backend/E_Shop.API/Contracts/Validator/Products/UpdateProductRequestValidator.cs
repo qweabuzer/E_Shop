@@ -25,8 +25,7 @@ public class UpdateProductRequestValidator : AbstractValidator<UpdateProductRequ
 			.NotEmpty()
 			.Matches(@"^https?://.*\.(jpg|jpeg|png|gif|webp)$")
 			.WithMessage("ссылка должна вести на изображение jpg, jpeg, png, gif, webp")
-			.MaximumLength(300)
-			.When(x => x.Image is not null);
+			.When(x => !string.IsNullOrEmpty(x.Image));
 
 		RuleFor(x => x.CategoryId)
 			.NotEqual(Guid.Empty)

@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace E_Shop.API.Contracts.Validator.Products;
 
-public class CreateProductRequestValidator : AbstractValidator<ProductCreateRequest>
+public class CreateProductRequestValidator : AbstractValidator<CreateProductRequest>
 {
 	public CreateProductRequestValidator()
 	{
@@ -23,7 +23,6 @@ public class CreateProductRequestValidator : AbstractValidator<ProductCreateRequ
 			.NotEmpty()
 			.Matches(@"^https?://.*\.(jpg|jpeg|png|gif|webp)$")
 			.WithMessage("ссылка должна вести на изображение jpg, jpeg, png, gif, webp")
-			.MaximumLength(300)
 			.When(x => !string.IsNullOrEmpty(x.Image));
 
 		RuleFor(x => x.CategoryId)
