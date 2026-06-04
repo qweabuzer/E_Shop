@@ -20,7 +20,13 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddAutoMapper(typeof(MappingProfile));
+builder.Services.AddAutoMapper(cfg =>
+{
+	cfg.AddProfile<UsersMappingProfile>();
+	cfg.AddProfile<ProductsMappingProfile>();
+	cfg.AddProfile<CategoriesMappingProfile>();
+});
+
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 builder.Logging.AddDebug();
