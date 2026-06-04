@@ -1,8 +1,5 @@
-﻿using E_Shop.API.Contracts.Categories;
-using E_Shop.API.Extensions;
+﻿using E_Shop.Contracts.Contracts.Categories;
 using E_Shop.Core.Interfaces;
-using E_Shop.Core.Models;
-using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 
 namespace E_Shop.API.Controllers;
@@ -13,13 +10,11 @@ public class CategoryController : ControllerBase
 {
 	private readonly ICategoryService _categoryService;
 	private readonly ILogger<CategoryController> _logger;
-	private readonly IValidator<CreateCategoryRequest> _createValidator;
 
-	public CategoryController(ICategoryService categoryService, ILogger<CategoryController> logger, IValidator<CreateCategoryRequest> createValidator)
+	public CategoryController(ICategoryService categoryService, ILogger<CategoryController> logger)
 	{
 		_categoryService = categoryService;
 		_logger = logger;
-		_createValidator = createValidator;
 	}
 
 	[HttpGet("GetAll")]
@@ -41,48 +36,13 @@ public class CategoryController : ControllerBase
 	[HttpPost("Create")]
 	public async Task<ActionResult<Guid>> Create([FromBody] CreateCategoryRequest request)
 	{
-		var validationResult = await _createValidator.ValidateAsync(request);
-
-		if(!validationResult.IsValid)
-			return BadRequest(validationResult.Errors.ErrorResponse());
-
-		var category = Category.Create(
-			Guid.NewGuid(),
-			request.Name,
-			request.Description);
-
-		if (category.IsFailure)
-		{
-			_logger.LogError(category.Error);
-			return BadRequest(category.Error);
-		}
-
-		var categoryId = await _categoryService.CreateCategory(category.Value);
-
-		if (categoryId.IsFailure)
-		{
-			_logger.LogError(categoryId.Error);
-			return BadRequest(categoryId.Error);
-		}
-
-		return Ok(categoryId.Value);
+		return await _categoryService.CreateCategory(request);
 	}
 
-	[HttpPut("Update")]
+	[HttpPatch("Update")]
 	public async Task<ActionResult<Guid>> UpdateInfo(Guid id, [FromBody] CreateCategoryRequest request)
 	{
-		var categoryId = await _categoryService.UpdateInfo(
-			id,
-			request.Name,
-			request.Description);
-
-		if (categoryId.IsFailure)
-		{
-			_logger.LogError(categoryId.Error);
-			return BadRequest(categoryId.Error);
-		}
-
-		return Ok(categoryId.Value);
+		return await _categoryService.UpdateInfo(request, id);
 	}
 
 	[HttpDelete("Delete")]

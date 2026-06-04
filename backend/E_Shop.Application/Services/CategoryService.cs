@@ -1,6 +1,8 @@
 ﻿using CSharpFunctionalExtensions;
+using E_Shop.Contracts.Contracts.Categories;
 using E_Shop.Core.Interfaces;
 using E_Shop.Core.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace E_Shop.Application.Services;
 
@@ -17,24 +19,38 @@ public class CategoryService : ICategoryService
 		return await _categoryRepository.GetAll();
 	}
 
-	public async Task<Result<Guid>> CreateCategory(Category category)
+	public async Task<ActionResult<Guid>> CreateCategory(CreateCategoryRequest request)
 	{
+		var category = new Category
+		{
+			Id = Guid.NewGuid(),
+			Name = request.Name,
+			Description = request.Description,
+		};
+
 		var result = await _categoryRepository.Create(category);
 
 		if (result == Guid.Empty)
-			return Result.Failure<Guid>("Ошибка при созаднии категории");
+		{
+			return new BadRequestObjectResult("Ошибка при созаднии категории");
+		}
 
-		return Result.Success<Guid>(result);
+		return new OkObjectResult(result);
 	}
 
-	public async Task<Result<Guid>> UpdateInfo(Guid id, string name, string description)
+	public async Task<ActionResult<Guid>> UpdateInfo(CreateCategoryRequest request, Guid id)
 	{
-		var result = await _categoryRepository.Update(id, name, description);
+		var result = await _categoryRepository.Update(
+			id,
+			request.Name,
+			request.Description);
 
 		if (result == Guid.Empty)
-			return Result.Failure<Guid>("Ошибка при обновлении данных");
+		{
+			return new BadRequestObjectResult("Ошибка при обновлении категории");
+		}
 
-		return Result.Success<Guid>(result);
+		return new OkObjectResult(result);
 	}
 
 	public async Task<Result<Guid>> Delete(Guid id)

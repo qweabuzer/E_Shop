@@ -1,4 +1,4 @@
-﻿using E_Shop.API.Contracts.Users;
+﻿using E_Shop.Contracts.Contracts.Users;
 using FluentValidation;
 
 namespace E_Shop.API.Contracts.Validator.Users;
@@ -7,8 +7,6 @@ public class CreateUserRequestValidator : AbstractValidator<CreateUsersRequest>
 {
 	public CreateUserRequestValidator()
 	{
-		ClassLevelCascadeMode = CascadeMode.Stop;
-
 		RuleFor(x => x.Name)
 			.NotEmpty()
 			.MaximumLength(20);

@@ -1,4 +1,4 @@
-﻿using E_Shop.API.Contracts.Categories;
+﻿using E_Shop.Contracts.Contracts.Categories;
 using FluentValidation;
 
 namespace E_Shop.API.Contracts.Validator.Categories;
@@ -7,8 +7,6 @@ public class CreateCategoryRequestValidator : AbstractValidator<CreateCategoryRe
 {
 	public CreateCategoryRequestValidator()
 	{
-		ClassLevelCascadeMode = CascadeMode.Stop;
-
 		RuleFor(x => x.Name)
 			.NotEmpty()
 			.MaximumLength(25);

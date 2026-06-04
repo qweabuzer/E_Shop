@@ -1,16 +1,22 @@
-﻿using FluentValidation.Results;
+﻿using FluentValidation;
+using FluentValidation.Results;
 
 namespace E_Shop.API.Extensions;
 
 public static class FluentValidationExtensions
 {
-	public static List<object> ErrorResponse(this IList<ValidationFailure> error)
+	public static object ErrorResponse(this ValidationFailure error)
 	{
-		return error.Select(e => new
+		return new
 		{
-			field = e.PropertyName,
-			message = e.ErrorMessage
+			field = error.PropertyName,
+			message = error.ErrorMessage
+		};
+	}
 
-		}).ToList<object>();
+	public static IValidator? GetValidator(this IServiceProvider services, object arg)
+	{
+		var validatorType = typeof(IValidator<>).MakeGenericType(arg.GetType());
+		return services.GetService(validatorType) as IValidator;
 	}
 }

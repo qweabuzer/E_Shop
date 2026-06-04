@@ -1,10 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
-using E_Shop.Core.Models;
 using E_Shop.Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using E_Shop.API.Contracts.Users;
-using FluentValidation;
-using E_Shop.API.Extensions;
+using E_Shop.Contracts.Contracts.Users;
 
 namespace E_Shop.API.Controllers;
 
@@ -14,14 +11,10 @@ public class UsersController : ControllerBase
 {
 	private readonly IUsersService _usersService;
 	private readonly IAuthService _authService;
-	private readonly IValidator<CreateUsersRequest> _createValidator;
-	private readonly IValidator<UpdateUsersRequest> _updateValidator;
-	public UsersController(IUsersService usersService, IAuthService authService, IValidator<CreateUsersRequest> createValidator, IValidator<UpdateUsersRequest> updateValidator)
+	public UsersController(IUsersService usersService, IAuthService authService)
 	{
 		_usersService = usersService;
 		_authService = authService;
-		_createValidator = createValidator;
-		_updateValidator = updateValidator;
 	}
 
 	[HttpGet("GetAll")]
@@ -46,56 +39,18 @@ public class UsersController : ControllerBase
 	[HttpPost("Create")]
 	public async Task<ActionResult<Guid>> CreateUser([FromBody] CreateUsersRequest request)
 	{
-		var validationResult = await _createValidator.ValidateAsync(request);
-
-		if (!validationResult.IsValid)
-			return BadRequest(validationResult.Errors.ErrorResponse());
-
-		var user = Users.Create(
-			Guid.NewGuid(),
-			request.Name,
-			request.Email,
-			request.Login,
-			request.Password,
-			request.ProfileImage
-			);
-
-		if (user.IsFailure)
-			return BadRequest(user.Error);
-
-		var userId = await _usersService.CreateUser(user.Value);
-
-		if (userId.IsFailure)
-			return BadRequest(userId.Error);
-
-		return Ok(userId.Value);
+		return await _usersService.CreateUser(request);
 	}
 
-	[HttpPut("Update")]
+	[HttpPatch("Update")]
 	public async Task<ActionResult<Guid>> UpdateUser(Guid userId, [FromBody] UpdateUsersRequest request)
 	{
-		var validationResult = await _updateValidator.ValidateAsync(request);
-
-		if (!validationResult.IsValid)
-			return BadRequest(validationResult.Errors.ErrorResponse());
-
-		var result = await _usersService.UpdateInfo(
-			userId,
-			request.Name,
-			request.Email,
-			request.Login,
-			request.Password,
-			request.ProfileImage);
-
-		if (result.IsFailure)
-			return BadRequest(result.Error);
-
-		return Ok(result.Value);
+		return await _usersService.UpdateInfo(request, userId);
 	}
 
 	[HttpDelete("Delete")]
 	public async Task<ActionResult<Guid>> DeleteUser(Guid userId)
 	{
-		return Ok(await _usersService.Delete(userId));
+		return await _usersService.Delete(userId);
 	}
 }

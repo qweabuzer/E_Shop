@@ -1,4 +1,4 @@
-﻿using E_Shop.API.Contracts.Products;
+﻿using E_Shop.Contracts.Contracts.Products;
 using FluentValidation;
 
 namespace E_Shop.API.Contracts.Validator.Products;
@@ -7,8 +7,6 @@ public class CreateProductRequestValidator : AbstractValidator<CreateProductRequ
 {
 	public CreateProductRequestValidator()
 	{
-		ClassLevelCascadeMode = CascadeMode.Stop;
-
 		RuleFor(x => x.Name)
 			.NotEmpty()
 			.MaximumLength(300);

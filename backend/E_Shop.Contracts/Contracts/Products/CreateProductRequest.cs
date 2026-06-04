@@ -1,4 +1,4 @@
-﻿namespace E_Shop.API.Contracts.Products;
+﻿namespace E_Shop.Contracts.Contracts.Products;
 
 public record CreateProductRequest
 {

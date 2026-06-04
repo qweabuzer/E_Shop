@@ -1,4 +1,4 @@
-﻿namespace E_Shop.API.Contracts.Categories;
+﻿namespace E_Shop.Contracts.Contracts.Categories;
 
 public record CategoryResponse
 {
