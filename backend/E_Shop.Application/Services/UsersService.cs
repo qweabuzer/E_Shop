@@ -21,12 +21,6 @@ public class UsersService : IUsersService
 
 	public async Task<ActionResult<Guid>> CreateUser(CreateUsersRequest request)
 	{
-		var name = request.Name;
-		if (string.IsNullOrWhiteSpace(name))
-		{
-			name = Users.UserCounter++.ToString();
-		}
-
 		var image = request.ProfileImage;
 		if (string.IsNullOrWhiteSpace(image))
 		{
@@ -35,8 +29,7 @@ public class UsersService : IUsersService
 
 		var user = new Users
 		{
-			Id = Guid.NewGuid(),
-			Name = name,
+			Name = request.Name,
 			Email = request.Email,
 			Login = request.Login,
 			Password = request.Password,

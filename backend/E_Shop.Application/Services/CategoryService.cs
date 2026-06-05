@@ -23,7 +23,6 @@ public class CategoryService : ICategoryService
 	{
 		var category = new Category
 		{
-			Id = Guid.NewGuid(),
 			Name = request.Name,
 			Description = request.Description,
 		};

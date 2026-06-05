@@ -6,8 +6,8 @@ using E_Shop.Core.Interfaces;
 using E_Shop.Application.Services;
 using E_Shop.DataAccess.Mapping;
 using FluentValidation;
-using E_Shop.API.Contracts.Validator.Users;
 using E_Shop.API.Filters;
+using E_Shop.API.Validator.Users;
 
 var builder = WebApplication.CreateBuilder(args);
 

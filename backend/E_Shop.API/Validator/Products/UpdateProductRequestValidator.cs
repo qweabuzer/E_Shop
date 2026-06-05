@@ -1,7 +1,7 @@
 ﻿using E_Shop.Contracts.Contracts.Products;
 using FluentValidation;
 
-namespace E_Shop.API.Contracts.Validator.Products;
+namespace E_Shop.API.Validator.Products;
 
 public class UpdateProductRequestValidator : AbstractValidator<UpdateProductRequest>
 {

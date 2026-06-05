@@ -31,7 +31,6 @@ public class ProductsService : IProductsService
 
 		var product = new Product
 		{
-			Id = Guid.NewGuid(),
 			Name = request.Name,
 			Description = description,
 			Price = request.Price,

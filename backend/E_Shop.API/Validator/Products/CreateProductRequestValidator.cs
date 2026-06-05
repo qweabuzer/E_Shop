@@ -1,7 +1,7 @@
 ﻿using E_Shop.Contracts.Contracts.Products;
 using FluentValidation;
 
-namespace E_Shop.API.Contracts.Validator.Products;
+namespace E_Shop.API.Validator.Products;
 
 public class CreateProductRequestValidator : AbstractValidator<CreateProductRequest>
 {
@@ -26,7 +26,7 @@ public class CreateProductRequestValidator : AbstractValidator<CreateProductRequ
 			.When(x => !string.IsNullOrEmpty(x.Image));
 
 		RuleFor(x => x.CategoryId)
-				.NotEqual(Guid.Empty)
+				.NotNull()
 				.When(x => x.CategoryId.HasValue);
 	}
 }
