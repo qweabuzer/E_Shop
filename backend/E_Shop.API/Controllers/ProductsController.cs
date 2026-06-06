@@ -1,5 +1,7 @@
-﻿using E_Shop.Contracts.Contracts.Products;
-using E_Shop.Core.Interfaces;
+﻿using E_Shop.Contracts.Commands;
+using E_Shop.Contracts.Contracts.Products;
+using E_Shop.Contracts.Queries;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace E_Shop.API.Controllers;
@@ -8,57 +10,58 @@ namespace E_Shop.API.Controllers;
 [ApiController]
 public class ProductsController : ControllerBase
 {
-	private readonly IProductsService _productsService;
-	private readonly ILogger<ProductsController> _logger;
-	public ProductsController(IProductsService productsService, ILogger<ProductsController> logger)
+	private readonly IMediator _mediator;
+	public ProductsController(IMediator mediator)
 	{
-		_productsService = productsService;
-		_logger = logger;
+		_mediator = mediator;
 	}
 
 	[HttpGet("GetAll")]
 	public async Task<ActionResult<List<ProductResponse>>> GetAll()
 	{
-		var products = await _productsService.GetAllProducts();
+		var query = new GetAllProductsQuery();
 
-		var response = products
-			.Select(p => new ProductResponse
-			{
-				Id = p.Id,
-				Name = p.Name,
-				Description = p.Description,
-				Price = p.Price,
-				CategoryId = p.CategoryId,
-				Image = p.Image,
-				IsAvailable = p.IsAvailable
-			});
-
-		return Ok(response);
+		return await _mediator.Send(query);
 	}
 
 	[HttpPost("Create")]
 	public async Task<ActionResult<Guid>> CreateProduct([FromBody] CreateProductRequest request)
 	{
-		return await _productsService.CreateProduct(request);
+		var command = new CreateProductCommand
+		{
+			Name = request.Name,
+			Description = request.Description,
+			Price = request.Price,
+			CategoryId = request.CategoryId,
+			Image = request.Image,
+			IsAvailable = request.IsAvailable
+		};
+
+		return await _mediator.Send(command);
 	}
 
 	[HttpPatch("Update")]
 	public async Task<ActionResult<Guid>> UpdateInfo(Guid id, [FromBody] UpdateProductRequest request)
 	{
-		return await _productsService.UpdateInfo(request, id);
+		var command = new UpdateProductCommand
+		{
+			Id = id,
+			Name = request.Name,
+			Description = request.Description,
+			Price = request.Price,
+			CategoryId = request.CategoryId,
+			Image = request.Image,
+			IsAvailable = request.IsAvailable
+		};
+
+		return await _mediator.Send(command);
 	}
 
 	[HttpDelete("Delete")]
 	public async Task<ActionResult<Guid>> DeleteProduct(Guid productId)
 	{
-		var result = await _productsService.DeleteProduct(productId);
+		var command = new DeleteProductCommand { Id = productId };
 
-		if (result.IsFailure)
-		{
-			_logger.LogError(result.Error);
-			return BadRequest(result.Error);
-		}
-
-		return Ok(result.Value);
+		return await _mediator.Send(command);
 	}
 }

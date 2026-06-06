@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using E_Shop.Contracts.Commands;
 using E_Shop.Contracts.Contracts.Products;
 using E_Shop.Core.Interfaces;
 using E_Shop.Core.Models;
@@ -15,15 +16,15 @@ public class ProductsService : IProductsService
 	{
 		_productsRepository = productsRepository;
 	}
-	public async Task<ActionResult<Guid>> CreateProduct(CreateProductRequest request)
+	public async Task<ActionResult<Guid>> CreateProduct(CreateProductCommand command)
 	{
-		var description = request.Description;
+		var description = command.Description;
 		if (string.IsNullOrWhiteSpace(description))
 		{
 			description = Product.NoDescription;
 		}
 
-		var image = request.Image;
+		var image = command.Image;
 		if (string.IsNullOrWhiteSpace(image))
 		{
 			image = Product.NoImage;
@@ -31,13 +32,12 @@ public class ProductsService : IProductsService
 
 		var product = new Product
 		{
-			Id = Guid.NewGuid(),
-			Name = request.Name,
+			Name = command.Name,
 			Description = description,
-			Price = request.Price,
-			CategoryId = request.CategoryId,
+			Price = command.Price,
+			CategoryId = command.CategoryId,
 			Image = image,
-			IsAvailable = request.IsAvailable
+			IsAvailable = command.IsAvailable
 		};
 
 		var result = await _productsRepository.Create(product);
@@ -50,30 +50,46 @@ public class ProductsService : IProductsService
 		return new OkObjectResult(result);
 	}
 
-	public async Task<Result<Guid>> DeleteProduct(Guid id)
+	public async Task<ActionResult<Guid>> DeleteProduct(Guid id)
 	{
 		var result = await _productsRepository.Delete(id);
 
 		if (result == Guid.Empty)
-			return Result.Failure<Guid>("Ошибка при удалении товара");
+		{
+			return new BadRequestObjectResult("ошибка при удалении товара");
+		}
 
-		return Result.Success<Guid>(result);
+		return new OkObjectResult(result);
 	}
 
-	public async Task<List<Product>> GetAllProducts()
+	public async Task<List<ProductResponse>> GetAllProducts()
 	{
-		return await _productsRepository.GetAll();
+		var products = await _productsRepository.GetAll();
+
+		var response = products
+			.Select(p => new ProductResponse
+			{
+				Id = p.Id,
+				Name = p.Name,
+				Description = p.Description,
+				Price = p.Price,
+				CategoryId = p.CategoryId,
+				Image = p.Image,
+				IsAvailable = p.IsAvailable
+			}).ToList();
+
+		return response;
 	}
 
-	public async Task<ActionResult<Guid>> UpdateInfo(UpdateProductRequest request, Guid id)
+	public async Task<ActionResult<Guid>> UpdateInfo(UpdateProductCommand command)
 	{
-		var result = await _productsRepository.Update(id,
-			request.Name,
-			request.Description,
-			request.Price,
-			request.CategoryId,
-			request.Image,
-			request.IsAvailable);
+		var result = await _productsRepository.Update(command.Id,
+			command.Name,
+			command.Description,
+			command.Price,
+			command.CategoryId,
+			command.Image,
+			command.IsAvailable);
 
 		if (result == Guid.Empty)
 		{
