@@ -19,25 +19,13 @@ public class ProductsController : ControllerBase
 	[HttpGet("GetAll")]
 	public async Task<ActionResult<List<ProductResponse>>> GetAll()
 	{
-		var query = new GetAllProductsQuery();
-
-		return await _mediator.Send(query);
+		return await _mediator.Send(new GetAllProductsQuery());
 	}
 
 	[HttpPost("Create")]
 	public async Task<ActionResult<Guid>> CreateProduct([FromBody] CreateProductRequest request)
 	{
-		var command = new CreateProductCommand
-		{
-			Name = request.Name,
-			Description = request.Description,
-			Price = request.Price,
-			CategoryId = request.CategoryId,
-			Image = request.Image,
-			IsAvailable = request.IsAvailable
-		};
-
-		return await _mediator.Send(command);
+		return await _mediator.Send(request);
 	}
 
 	[HttpPatch("Update")]
@@ -60,8 +48,6 @@ public class ProductsController : ControllerBase
 	[HttpDelete("Delete")]
 	public async Task<ActionResult<Guid>> DeleteProduct(Guid productId)
 	{
-		var command = new DeleteProductCommand { Id = productId };
-
-		return await _mediator.Send(command);
+		return await _mediator.Send(new DeleteProductCommand { Id = productId });
 	}
 }

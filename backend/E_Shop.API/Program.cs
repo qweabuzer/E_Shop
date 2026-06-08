@@ -8,7 +8,7 @@ using E_Shop.DataAccess.Mapping;
 using FluentValidation;
 using E_Shop.API.Contracts.Validator.Users;
 using E_Shop.API.Filters;
-using E_Shop.Application.Products.Handlers.Create;
+using E_Shop.Application.Features.Product.Create;
 
 var builder = WebApplication.CreateBuilder(args);
 

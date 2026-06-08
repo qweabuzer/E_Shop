@@ -23,4 +23,8 @@
     <ProjectReference Include="..\E_Shop.Core\E_Shop.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Products\Handlers\Create\" />
+  </ItemGroup>
+
 </Project>

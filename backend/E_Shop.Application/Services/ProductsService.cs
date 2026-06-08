@@ -2,7 +2,6 @@
 using E_Shop.Contracts.Commands;
 using E_Shop.Contracts.Contracts.Products;
 using E_Shop.Core.Interfaces;
-using E_Shop.Core.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace E_Shop.Application.Services;
@@ -15,39 +14,6 @@ public class ProductsService : IProductsService
 	public ProductsService(IProductsRepository productsRepository)
 	{
 		_productsRepository = productsRepository;
-	}
-	public async Task<ActionResult<Guid>> CreateProduct(CreateProductCommand command)
-	{
-		var description = command.Description;
-		if (string.IsNullOrWhiteSpace(description))
-		{
-			description = Product.NoDescription;
-		}
-
-		var image = command.Image;
-		if (string.IsNullOrWhiteSpace(image))
-		{
-			image = Product.NoImage;
-		}
-
-		var product = new Product
-		{
-			Name = command.Name,
-			Description = description,
-			Price = command.Price,
-			CategoryId = command.CategoryId,
-			Image = image,
-			IsAvailable = command.IsAvailable
-		};
-
-		var result = await _productsRepository.Create(product);
-
-		if (result == Guid.Empty)
-		{
-			return new BadRequestObjectResult("ошибка при создании товара");
-		}
-
-		return new OkObjectResult(result);
 	}
 
 	public async Task<ActionResult<Guid>> DeleteProduct(Guid id)
