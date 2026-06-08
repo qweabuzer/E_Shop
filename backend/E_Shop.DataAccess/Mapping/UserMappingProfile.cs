@@ -4,9 +4,9 @@ using E_Shop.DataAccess.Entities;
 
 namespace E_Shop.DataAccess.Mapping;
 
-public class UsersMappingProfile : Profile
+public class UserMappingProfile : Profile
 {
-	public UsersMappingProfile()
+	public UserMappingProfile()
 	{
 		CreateUserMapping();
 	}

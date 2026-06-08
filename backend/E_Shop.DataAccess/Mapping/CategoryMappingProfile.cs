@@ -3,9 +3,9 @@ using E_Shop.Core.Models;
 using E_Shop.DataAccess.Entities;
 
 namespace E_Shop.DataAccess.Mapping;
-public class CategoriesMappingProfile : Profile
+public class CategoryMappingProfile : Profile
 {
-	public CategoriesMappingProfile()
+	public CategoryMappingProfile()
 	{
 		CreateCategoryMapping();
 	}

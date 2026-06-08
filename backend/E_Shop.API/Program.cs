@@ -22,9 +22,9 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddAutoMapper(cfg =>
 {
-	cfg.AddProfile<UsersMappingProfile>();
-	cfg.AddProfile<ProductsMappingProfile>();
-	cfg.AddProfile<CategoriesMappingProfile>();
+	cfg.AddProfile<UserMappingProfile>();
+	cfg.AddProfile<ProductMappingProfile>();
+	cfg.AddProfile<CategoryMappingProfile>();
 });
 
 builder.Logging.ClearProviders();
