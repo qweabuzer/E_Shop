@@ -1,6 +1,5 @@
-﻿using E_Shop.API.Contracts.Products;
+﻿using E_Shop.Contracts.Contracts.Products;
 using E_Shop.Core.Interfaces;
-using E_Shop.Core.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace E_Shop.API.Controllers;
@@ -15,7 +14,6 @@ public class ProductsController : ControllerBase
 	{
 		_productsService = productsService;
 		_logger = logger;
-
 	}
 
 	[HttpGet("GetAll")]
@@ -39,53 +37,15 @@ public class ProductsController : ControllerBase
 	}
 
 	[HttpPost("Create")]
-	public async Task<ActionResult<Guid>> CreateProduct([FromBody] ProductRequest request)
+	public async Task<ActionResult<Guid>> CreateProduct([FromBody] CreateProductRequest request)
 	{
-		var product = Product.Create(
-			Guid.NewGuid(),
-			request.Name,
-			request.Description,
-			request.Price,
-			request.CategoryId,
-			request.Image,
-			request.IsAvailable);
-
-		if (product.IsFailure)
-		{
-			_logger.LogError(product.Error);
-			return BadRequest(product.Error);
-		}
-
-		var productId = await _productsService.CreateProduct(product.Value);
-
-		if (productId.IsFailure)
-		{
-			_logger.LogError(productId.Error);
-			return BadRequest(productId.Error);
-		}
-
-		return Ok(productId.Value);
+		return await _productsService.CreateProduct(request);
 	}
 
-	[HttpPut("Update")]
+	[HttpPatch("Update")]
 	public async Task<ActionResult<Guid>> UpdateInfo(Guid id, [FromBody] UpdateProductRequest request)
 	{
-		var productId = await _productsService.UpdateInfo(
-			id,
-			request.Name,
-			request.Description,
-			request.Price,
-			request.CategoryId,
-			request.Image,
-			request.IsAvailable);
-
-		if (productId.IsFailure)
-		{
-			_logger.LogError(productId.Error);
-			return BadRequest(productId.Error);
-		}
-
-		return Ok(productId.Value);
+		return await _productsService.UpdateInfo(request, id);
 	}
 
 	[HttpDelete("Delete")]

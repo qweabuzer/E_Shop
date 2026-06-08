@@ -1,6 +1,5 @@
-﻿using E_Shop.API.Contracts.Categories;
+﻿using E_Shop.Contracts.Contracts.Categories;
 using E_Shop.Core.Interfaces;
-using E_Shop.Core.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace E_Shop.API.Controllers;
@@ -35,45 +34,15 @@ public class CategoryController : ControllerBase
 	}
 
 	[HttpPost("Create")]
-	public async Task<ActionResult<Guid>> Create([FromBody] CategoryRequest request)
+	public async Task<ActionResult<Guid>> Create([FromBody] CreateCategoryRequest request)
 	{
-		var category = Category.Create(
-			Guid.NewGuid(),
-			request.Name,
-			request.Description);
-
-		if (category.IsFailure)
-		{
-			_logger.LogError(category.Error);
-			return BadRequest(category.Error);
-		}
-
-		var categoryId = await _categoryService.CreateCategory(category.Value);
-
-		if (categoryId.IsFailure)
-		{
-			_logger.LogError(categoryId.Error);
-			return BadRequest(categoryId.Error);
-		}
-
-		return Ok(categoryId.Value);
+		return await _categoryService.CreateCategory(request);
 	}
 
-	[HttpPut("Update")]
-	public async Task<ActionResult<Guid>> UpdateInfo(Guid id, [FromBody] CategoryRequest request)
+	[HttpPatch("Update")]
+	public async Task<ActionResult<Guid>> UpdateInfo(Guid id, [FromBody] CreateCategoryRequest request)
 	{
-		var categoryId = await _categoryService.UpdateInfo(
-			id,
-			request.Name,
-			request.Description);
-
-		if (categoryId.IsFailure)
-		{
-			_logger.LogError(categoryId.Error);
-			return BadRequest(categoryId.Error);
-		}
-
-		return Ok(categoryId.Value);
+		return await _categoryService.UpdateInfo(request, id);
 	}
 
 	[HttpDelete("Delete")]

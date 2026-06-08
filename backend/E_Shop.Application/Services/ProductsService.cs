@@ -1,6 +1,8 @@
 ﻿using CSharpFunctionalExtensions;
+using E_Shop.Contracts.Contracts.Products;
 using E_Shop.Core.Interfaces;
 using E_Shop.Core.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace E_Shop.Application.Services;
 
@@ -13,14 +15,38 @@ public class ProductsService : IProductsService
 	{
 		_productsRepository = productsRepository;
 	}
-	public async Task<Result<Guid>> CreateProduct(Product product)
+	public async Task<ActionResult<Guid>> CreateProduct(CreateProductRequest request)
 	{
+		var description = request.Description;
+		if (string.IsNullOrWhiteSpace(description))
+		{
+			description = Product.NoDescription;
+		}
+
+		var image = request.Image;
+		if (string.IsNullOrWhiteSpace(image))
+		{
+			image = Product.NoImage;
+		}
+
+		var product = new Product
+		{
+			Name = request.Name,
+			Description = description,
+			Price = request.Price,
+			CategoryId = request.CategoryId,
+			Image = image,
+			IsAvailable = request.IsAvailable
+		};
+
 		var result = await _productsRepository.Create(product);
 
 		if (result == Guid.Empty)
-			return Result.Failure<Guid>("Ошибка при создании товара");
+		{
+			return new BadRequestObjectResult("ошибка при создании товара");
+		}
 
-		return Result.Success<Guid>(result);
+		return new OkObjectResult(result);
 	}
 
 	public async Task<Result<Guid>> DeleteProduct(Guid id)
@@ -38,13 +64,21 @@ public class ProductsService : IProductsService
 		return await _productsRepository.GetAll();
 	}
 
-	public async Task<Result<Guid>> UpdateInfo(Guid id, string? name, string? description, decimal? price, Guid? categoryId, string? image, bool? isAvailable)
+	public async Task<ActionResult<Guid>> UpdateInfo(UpdateProductRequest request, Guid id)
 	{
-		var result = await _productsRepository.Update(id, name, description, price, categoryId, image, isAvailable);
+		var result = await _productsRepository.Update(id,
+			request.Name,
+			request.Description,
+			request.Price,
+			request.CategoryId,
+			request.Image,
+			request.IsAvailable);
 
 		if (result == Guid.Empty)
-			return Result.Failure<Guid>("Ошибка обновления данных");
+		{
+			return new BadRequestObjectResult("ошибка обновления данных");
+		}
 
-		return Result.Success<Guid>(result);
+		return new OkObjectResult(result);
 	}
 }

@@ -63,7 +63,7 @@ public class UsersRepository : IUsersRepository
 		return userEntity.Id;
 	}
 
-	public async Task<Guid> Update(Guid id, string name, string email, string login, string password, string image)
+	public async Task<Guid> Update(Guid id, string? name, string? email, string? login, string? password, string? image)
 	{
 		var chekLogin = await _context.Users
 			.FirstOrDefaultAsync(u => u.Login == login && u.Id != id);

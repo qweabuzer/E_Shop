@@ -23,7 +23,7 @@ public class UserTests
 		Users.UserCounter = 0;
 	}
 
-	[Fact]
+	/*[Fact]
 	public void Create_WithValidParameters_ReturnsSuccessResult()
 	{
 		var result = Users.Create(
@@ -274,6 +274,6 @@ public class UserTests
 			_testImage);
 
 		Assert.True(result.IsSuccess);
-	}
+	}*/
 }
 

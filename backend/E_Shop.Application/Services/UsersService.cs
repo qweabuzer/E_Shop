@@ -1,6 +1,7 @@
-﻿using CSharpFunctionalExtensions;
-using E_Shop.Core.Models;
+﻿using E_Shop.Core.Models;
 using E_Shop.Core.Interfaces;
+using Microsoft.AspNetCore.Mvc;
+using E_Shop.Contracts.Contracts.Users;
 
 namespace E_Shop.Application.Services;
 
@@ -18,23 +19,49 @@ public class UsersService : IUsersService
 		return await _usersRepository.GetAll();
 	}
 
-	public async Task<Result<Guid>> CreateUser(Users user)
+	public async Task<ActionResult<Guid>> CreateUser(CreateUsersRequest request)
 	{
-		var result = await _usersRepository.Create(user);
-		if (result == Guid.Empty)
-			return Result.Failure<Guid>("Пользователь уже существует");
+		var image = request.ProfileImage;
+		if (string.IsNullOrWhiteSpace(image))
+		{
+			image = Users.NoImage;
+		}
 
-		return Result.Success<Guid>(result);
+		var user = new Users
+		{
+			Name = request.Name,
+			Email = request.Email,
+			Login = request.Login,
+			Password = request.Password,
+			ProfileImage = image
+		};
+
+		var result = await _usersRepository.Create(user);
+
+		if (result == Guid.Empty)
+		{
+			return new BadRequestObjectResult("пользователь уже существует");
+		}
+
+		return new OkObjectResult(result);
 	}
 
-	public async Task<Result<Guid>> UpdateInfo(Guid id, string? name, string? email, string? login, string? password, string? image)
+	public async Task<ActionResult<Guid>> UpdateInfo(UpdateUsersRequest request, Guid id)
 	{
-		var result = await _usersRepository.Update(id, name, email, login, password, image);
+		var result = await _usersRepository.Update(
+			id,
+			request.Name,
+			request.Email,
+			request.Login,
+			request.Password,
+			request.ProfileImage);
 
 		if (result == Guid.Empty)
-			return Result.Failure<Guid>("Логин или почта уже заняты");
+		{
+			return new BadRequestObjectResult("логин или почта уже заняты");
+		}
 
-		return Result.Success<Guid>(result);
+		return new OkObjectResult(result);
 	}
 
 	public async Task<Guid> Delete(Guid id)

@@ -1,8 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
-using E_Shop.Core.Models;
 using E_Shop.Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using E_Shop.API.Contracts.Users;
+using E_Shop.Contracts.Contracts.Users;
 
 namespace E_Shop.API.Controllers;
 
@@ -38,48 +37,20 @@ public class UsersController : ControllerBase
 	}
 
 	[HttpPost("Create")]
-	public async Task<ActionResult<Guid>> CreateUser([FromBody] UsersRequest request)
+	public async Task<ActionResult<Guid>> CreateUser([FromBody] CreateUsersRequest request)
 	{
-		var user = Users.Create(
-			Guid.NewGuid(),
-			request.Name,
-			request.Email,
-			request.Login,
-			request.Password,
-			request.ProfileImage
-			);
-
-		if (user.IsFailure)
-			return BadRequest(user.Error);
-
-		var userId = await _usersService.CreateUser(user.Value);
-
-		if (userId.IsFailure)
-			return BadRequest(userId.Error);
-
-		return Ok(userId.Value);
+		return await _usersService.CreateUser(request);
 	}
 
-	[HttpPut("Update")]
-	public async Task<ActionResult<Guid>> UpdateUser(Guid userId, [FromBody] UsersRequest request)
+	[HttpPatch("Update")]
+	public async Task<ActionResult<Guid>> UpdateUser(Guid userId, [FromBody] UpdateUsersRequest request)
 	{
-		var result = await _usersService.UpdateInfo(
-			userId,
-			request.Name,
-			request.Email,
-			request.Login,
-			request.Password,
-			request.ProfileImage);
-
-		if (result.IsFailure)
-			return BadRequest(result.Error);
-
-		return Ok(result.Value);
+		return await _usersService.UpdateInfo(request, userId);
 	}
 
 	[HttpDelete("Delete")]
 	public async Task<ActionResult<Guid>> DeleteUser(Guid userId)
 	{
-		return Ok(await _usersService.Delete(userId));
+		return await _usersService.Delete(userId);
 	}
 }

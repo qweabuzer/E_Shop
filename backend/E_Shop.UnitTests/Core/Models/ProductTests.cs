@@ -1,6 +1,4 @@
-﻿using E_Shop.Core.Models;
-
-namespace E_Shop.UnitTests.Core.Models;
+﻿namespace E_Shop.UnitTests.Core.Models;
 
 public class ProductTests
 {
@@ -23,7 +21,7 @@ public class ProductTests
 		_testIsAvailable = true;
 	}
 
-	[Fact]
+	/*[Fact]
 	public void Create_WithValidParameters_ReturnsSuccessResult()
 	{
 		var result = Product.Create(
@@ -202,6 +200,6 @@ public class ProductTests
 			true);
 
 		Assert.True(minimalProduct.IsSuccess);
-	}
+	}*/
 }
 

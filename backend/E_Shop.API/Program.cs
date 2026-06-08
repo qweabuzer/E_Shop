@@ -5,10 +5,17 @@ using E_Shop.DataAccess.Repositories;
 using E_Shop.Core.Interfaces;
 using E_Shop.Application.Services;
 using E_Shop.DataAccess.Mapping;
+using FluentValidation;
+using E_Shop.API.Filters;
+using E_Shop.API.Validator.Users;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(options =>
+{
+	options.Filters.Add<FluentValidationFilter>();
+});
+
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen();
@@ -18,14 +25,6 @@ builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 builder.Logging.AddDebug();
 builder.Logging.SetMinimumLevel(LogLevel.Information);
-/*builder.Services.AddCors(options =>
-{ 
-    options.AddPolicy("AllowFrontend", builder =>
-        builder.WithOrigins("http://localhost:3000") 
-               .AllowAnyMethod()
-               .AllowAnyHeader()
-               .AllowCredentials());
-});*/
 
 builder.Services.AddCors(options =>
 {
@@ -51,6 +50,8 @@ builder.Services.AddScoped<IUsersService, UsersService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
+
+builder.Services.AddValidatorsFromAssembly(typeof(CreateUserRequestValidator).Assembly);
 
 var app = builder.Build();
 
