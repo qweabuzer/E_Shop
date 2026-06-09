@@ -1,7 +1,7 @@
 ﻿using E_Shop.Contracts.Contracts.Users;
 using FluentValidation;
 
-namespace E_Shop.API.Contracts.Validator.Users;
+namespace E_Shop.API.Validator.Users;
 
 public class CreateUserRequestValidator : AbstractValidator<CreateUsersRequest>
 {

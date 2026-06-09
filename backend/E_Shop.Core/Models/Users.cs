@@ -10,5 +10,4 @@ public class Users
 	public string? ProfileImage { get; init; }
 
 	public const string NoImage = "https://www.no5.com/media/1772/place-holder-image.png";
-	public static int UserCounter { get; set; }
 }
