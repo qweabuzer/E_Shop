@@ -8,6 +8,7 @@ using E_Shop.DataAccess.Mapping;
 using FluentValidation;
 using E_Shop.API.Filters;
 using E_Shop.Application.Features.Product.Create;
+using E_Shop.API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -58,6 +59,9 @@ builder.Services.AddScoped<IUsersService, UsersService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddSingleton<IMessagePublisher, RabbitMqService>();
+
+builder.Services.AddHostedService<UserCreatedConsumer>();
 
 builder.Services.AddValidatorsFromAssembly(typeof(CreateUserRequestValidator).Assembly);
 

@@ -18,9 +18,19 @@ services:
       timeout: 5s
       retries: 5
       start_period: 10s
+      
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
 
 volumes:
   postgres-data:
+  rabbitmq_data:
 
 networks:
   eshop-network:
