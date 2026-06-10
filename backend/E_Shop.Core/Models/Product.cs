@@ -10,7 +10,4 @@ public class Product
 	public Category? Category { get; init; }
 	public string Image { get; init; }
 	public bool IsAvailable { get; init; }
-
-	public const string NoImage = "https://topzero.com/wp-content/uploads/2020/06/topzero-products-Malmo-Matte-Black-TZ-PE458M-image-003.jpg";
-	public const string NoDescription = "no description";
 }

@@ -1,7 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
+using E_Shop.Contracts.Commands;
 using E_Shop.Contracts.Contracts.Products;
 using E_Shop.Core.Interfaces;
-using E_Shop.Core.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace E_Shop.Application.Services;
@@ -15,64 +15,47 @@ public class ProductsService : IProductsService
 	{
 		_productsRepository = productsRepository;
 	}
-	public async Task<ActionResult<Guid>> CreateProduct(CreateProductRequest request)
+
+	public async Task<ActionResult<Guid>> DeleteProduct(Guid id)
 	{
-		var description = request.Description;
-		if (string.IsNullOrWhiteSpace(description))
-		{
-			description = Product.NoDescription;
-		}
-
-		var image = request.Image;
-		if (string.IsNullOrWhiteSpace(image))
-		{
-			image = Product.NoImage;
-		}
-
-		var product = new Product
-		{
-			Name = request.Name,
-			Description = description,
-			Price = request.Price,
-			CategoryId = request.CategoryId,
-			Image = image,
-			IsAvailable = request.IsAvailable
-		};
-
-		var result = await _productsRepository.Create(product);
+		var result = await _productsRepository.Delete(id);
 
 		if (result == Guid.Empty)
 		{
-			return new BadRequestObjectResult("ошибка при создании товара");
+			return new BadRequestObjectResult("ошибка при удалении товара");
 		}
 
 		return new OkObjectResult(result);
 	}
 
-	public async Task<Result<Guid>> DeleteProduct(Guid id)
+	public async Task<List<ProductResponse>> GetAllProducts()
 	{
-		var result = await _productsRepository.Delete(id);
+		var products = await _productsRepository.GetAll();
 
-		if (result == Guid.Empty)
-			return Result.Failure<Guid>("Ошибка при удалении товара");
+		var response = products
+			.Select(p => new ProductResponse
+			{
+				Id = p.Id,
+				Name = p.Name,
+				Description = p.Description,
+				Price = p.Price,
+				CategoryId = p.CategoryId,
+				Image = p.Image,
+				IsAvailable = p.IsAvailable
+			}).ToList();
 
-		return Result.Success<Guid>(result);
+		return response;
 	}
 
-	public async Task<List<Product>> GetAllProducts()
+	public async Task<ActionResult<Guid>> UpdateInfo(UpdateProductCommand command)
 	{
-		return await _productsRepository.GetAll();
-	}
-
-	public async Task<ActionResult<Guid>> UpdateInfo(UpdateProductRequest request, Guid id)
-	{
-		var result = await _productsRepository.Update(id,
-			request.Name,
-			request.Description,
-			request.Price,
-			request.CategoryId,
-			request.Image,
-			request.IsAvailable);
+		var result = await _productsRepository.Update(command.Id,
+			command.Name,
+			command.Description,
+			command.Price,
+			command.CategoryId,
+			command.Image,
+			command.IsAvailable);
 
 		if (result == Guid.Empty)
 		{

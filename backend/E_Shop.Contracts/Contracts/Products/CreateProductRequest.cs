@@ -1,6 +1,8 @@
-﻿namespace E_Shop.Contracts.Contracts.Products;
+﻿using MediatR;
 
-public record CreateProductRequest
+namespace E_Shop.Contracts.Contracts.Products;
+
+public record CreateProductRequest : IRequest<Guid>
 {
 	public required string Name { get; init; }
 	public required string Description { get; init; }

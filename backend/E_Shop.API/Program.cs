@@ -7,7 +7,7 @@ using E_Shop.Application.Services;
 using E_Shop.DataAccess.Mapping;
 using FluentValidation;
 using E_Shop.API.Filters;
-using E_Shop.API.Validator.Users;
+using E_Shop.Application.Features.Product.Create;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -48,6 +48,8 @@ builder.Services.AddDbContext<EShopDbContext>(
 		options.UseNpgsql(builder.Configuration.GetConnectionString(nameof(EShopDbContext)));
 		//options.UseSqlServer(builder.Configuration.GetConnectionString(nameof(EShopDbContext)));
 	});
+
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateProductHandler).Assembly));
 
 builder.Services.AddScoped<IUsersRepository, UsersRepository>();
 builder.Services.AddScoped<IProductsRepository, ProductsRepository>();
