@@ -1,6 +1,8 @@
 ﻿using System.Text;
 using System.Text.Json;
+using E_Shop.API.Options;
 using E_Shop.Core.Interfaces;
+using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
 
 namespace E_Shop.API.Services;
@@ -10,14 +12,16 @@ public class RabbitMqService : IMessagePublisher, IDisposable
 	private readonly IConnection _connection;
 	private readonly IChannel _channel;
 
-	public RabbitMqService()
+	public RabbitMqService(IOptions<RabbitMqOptions> rabbitOptions)
 	{
+		var options = rabbitOptions.Value;
+
 		var factory = new ConnectionFactory
 		{
-			HostName = "localhost",
-			Port = 5672,
-			UserName = "guest",
-			Password = "guest"
+			HostName = options.HostName,
+			Port = options.Port,
+			UserName = options.UserName,
+			Password = options.Password
 		};
 
 		_connection = factory.CreateConnectionAsync().Result;

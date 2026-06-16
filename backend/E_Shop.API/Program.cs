@@ -9,6 +9,8 @@ using FluentValidation;
 using E_Shop.API.Filters;
 using E_Shop.Application.Features.Product.Create;
 using E_Shop.API.Services;
+using E_Shop.API.Validator.Users;
+using E_Shop.API.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -60,6 +62,9 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddSingleton<IMessagePublisher, RabbitMqService>();
+
+builder.Services.Configure<RabbitMqOptions>(
+	builder.Configuration.GetSection("RabbitMQ"));
 
 builder.Services.AddHostedService<UserCreatedConsumer>();
 

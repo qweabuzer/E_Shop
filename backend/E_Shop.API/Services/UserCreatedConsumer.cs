@@ -1,7 +1,9 @@
 ﻿
 using System.Text;
 using System.Text.Json;
+using E_Shop.API.Options;
 using E_Shop.Contracts.Messages;
+using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
@@ -10,21 +12,23 @@ namespace E_Shop.API.Services;
 public class UserCreatedConsumer : BackgroundService
 {
 	private readonly ILogger<UserCreatedConsumer> _logger;
+	private readonly RabbitMqOptions _rabbitOptions;
 	private IConnection? _connection;
 	private IChannel? _channel;
 
-	public UserCreatedConsumer(ILogger<UserCreatedConsumer> logger)
+	public UserCreatedConsumer(ILogger<UserCreatedConsumer> logger, IOptions<RabbitMqOptions> rabbitOptions)
 	{
 		_logger = logger;
+		_rabbitOptions = rabbitOptions.Value;
 	}
 	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 	{
 		var factory = new ConnectionFactory
 		{
-			HostName = "localhost",
-			Port = 5672,
-			UserName = "guest",
-			Password = "guest"
+			HostName = _rabbitOptions.HostName,
+			Port = _rabbitOptions.Port,
+			UserName = _rabbitOptions.UserName,
+			Password = _rabbitOptions.Password
 		};
 
 		_connection = await factory.CreateConnectionAsync();
