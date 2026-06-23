@@ -2,16 +2,19 @@
 using E_Shop.Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using E_Shop.Contracts.Contracts.Users;
+using E_Shop.Contracts.Messages;
 
 namespace E_Shop.Application.Services;
 
 public class UsersService : IUsersService
 {
 	private readonly IUsersRepository _usersRepository;
+	private readonly IMessagePublisher _messagePublisher;
 
-	public UsersService(IUsersRepository usersRepository)
+	public UsersService(IUsersRepository usersRepository, IMessagePublisher messagePublisher)
 	{
 		_usersRepository = usersRepository;
+		_messagePublisher = messagePublisher;
 	}
 
 	public async Task<List<Users>> GetAllUsers()
@@ -42,6 +45,14 @@ public class UsersService : IUsersService
 		{
 			return new BadRequestObjectResult("пользователь уже существует");
 		}
+
+		var message = new UserCreatedMessage
+		{
+			UserId = result,
+			CreatedTime = DateTime.UtcNow
+		};
+
+		await _messagePublisher.PublishMessage("user_created", message);
 
 		return new OkObjectResult(result);
 	}
